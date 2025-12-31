@@ -19,39 +19,22 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Aid-On/aid-on-platform.git",
-    "directory": "packages/templex"
+    "url": "https://github.com/Aid-On/templex.git"
   },
   "bugs": {
-    "url": "https://github.com/Aid-On/aid-on-platform/issues"
+    "url": "https://github.com/Aid-On/templex/issues"
   },
-  "homepage": "https://github.com/Aid-On/aid-on-platform/tree/main/packages/templex#readme",
-  "author": "Aid-On Team",
+  "homepage": "https://github.com/Aid-On/templex",
+  "author": "Aid-On",
   "engines": {
     "node": ">=20.0.0"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
-    "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
     "build": "tsc",
-    "postbuild": "npm run typecheck",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run tests/unit",
-    "test:watch": "vitest tests/unit",
-    "test:integration": "vitest run tests/integration",
-    "test:all": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "lint": "eslint src tests --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "cli:extract": "tsx cli/cli.ts",
-    "cli:generate": "tsx cli/cli-generate.ts",
-    "cli:help": "tsx cli/cli.ts --help && tsx cli/cli-generate.ts --help",
-    "prepublishOnly": "npm run build && npm run test",
-    "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build && npm run test"
   },
   "keywords": [
     "llm",
