@@ -157,7 +157,7 @@ export class TemplateExtractor {
         
         const mergedAnalysis: ChunkAnalysis = {
           elements: mergedElements,
-          keywords: mergedKeywords.map(k => k.term),
+          keywords: mergedKeywords, // Preserve weights for intermediate merges
           patterns: mergedPatterns,
           confidence: this.calculateConfidence(flatResults)
         };

@@ -147,7 +147,27 @@ export function validateChunkAnalysis(analysis: ChunkAnalysis): ChunkAnalysis {
     elements: Array.isArray(analysis.elements) 
       ? analysis.elements.map(validateTemplateElement)
       : [],
-    keywords: Array.isArray(analysis.keywords) ? analysis.keywords : [],
+    keywords: Array.isArray(analysis.keywords) 
+      ? (() => {
+          // Check if all items are strings
+          const allStrings = analysis.keywords.every(kw => typeof kw === 'string');
+          if (allStrings) {
+            return analysis.keywords as string[];
+          }
+          // Otherwise treat as weighted keywords
+          return analysis.keywords.map(kw => {
+            if (typeof kw === 'string') {
+              return { term: kw, weight: 1 };
+            } else if (kw && typeof kw === 'object' && 'term' in kw) {
+              return {
+                term: String(kw.term),
+                weight: typeof kw.weight === 'number' ? validateWeight(kw.weight) : 1
+              };
+            }
+            return { term: '', weight: 0 };
+          }).filter(kw => kw.term !== '') as Array<{term: string; weight: number}>;
+        })()
+      : [],
     patterns: analysis.patterns && typeof analysis.patterns === 'object' 
       ? analysis.patterns 
       : {},
