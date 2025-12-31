@@ -136,10 +136,37 @@ export class TemplateExtractor {
           summary: ''
         };
       },
-      mergeResults: (results) => ({
-        items: results.flat(),
-        needsSupplement: false
-      }),
+      mergeResults: (results) => {
+        const flatResults = results.flat();
+        
+        // If only one result, return as-is
+        if (flatResults.length <= 1) {
+          return {
+            items: flatResults,
+            needsSupplement: false
+          };
+        }
+
+        // Merge multiple ChunkAnalysis into one optimized result
+        const mergedElements = this.mergeStructures(
+          flatResults.map((r: ChunkAnalysis) => r.elements).flat()
+        );
+        
+        const mergedKeywords = this.mergeKeywords(flatResults);
+        const mergedPatterns = this.mergePatterns(flatResults);
+        
+        const mergedAnalysis: ChunkAnalysis = {
+          elements: mergedElements,
+          keywords: mergedKeywords.map(k => k.term),
+          patterns: mergedPatterns,
+          confidence: this.calculateConfidence(flatResults)
+        };
+
+        return {
+          items: [mergedAnalysis],
+          needsSupplement: false
+        };
+      },
       getKey: (item) => JSON.stringify(item)
     });
 
@@ -201,7 +228,7 @@ export class TemplateExtractor {
       },
 
       evaluate: async (state, actionResult) => {
-        const score = this.evaluateTemplate(actionResult.data);
+        const score = this.evaluateTemplate(actionResult.data, state.analyses);
         return {
           score,
           shouldContinue: score < this.config.minConfidence && state.iteration < 3,
@@ -382,13 +409,16 @@ export class TemplateExtractor {
     template: DocumentTemplate,
     analyses: ChunkAnalysis[]
   ): Promise<DocumentTemplate> {
-    // Merge all analysis results
+    // Since merging is now done in FractalProcessor,
+    // analyses should already be optimized (usually just 1 merged result)
+    const primaryAnalysis = analyses[0] || {};
+    
     const merged: DocumentTemplate = {
       title: template.title || 'Document Analysis',
-      structure: this.mergeStructures(analyses.map(a => a.elements).flat()),
+      structure: primaryAnalysis.elements || [],
       abstractTemplate: this.extractAbstractTemplate(analyses),
-      keywords: this.mergeKeywords(analyses),
-      patterns: this.mergePatterns(analyses),
+      keywords: analyses.length > 0 ? this.mergeKeywords(analyses) : [],
+      patterns: primaryAnalysis.patterns || {},
       metadata: this.extractMetadata(analyses)
     };
 
@@ -494,31 +524,41 @@ export class TemplateExtractor {
     };
   }
 
-  private evaluateTemplate(template: DocumentTemplate): number {
-    let score = 0;
+  private evaluateTemplate(template: DocumentTemplate, analyses?: ChunkAnalysis[]): number {
+    // Heuristic score (structure completeness)
+    let heuristicScore = 0;
     let factors = 0;
 
     if (template.structure.length > 0) {
-      score += 0.3;
+      heuristicScore += 0.3;
       factors += 0.3;
     }
 
     if (template.keywords.length > 0) {
-      score += 0.3;
+      heuristicScore += 0.3;
       factors += 0.3;
     }
 
     if (Object.keys(template.patterns).length > 0) {
-      score += 0.2;
+      heuristicScore += 0.2;
       factors += 0.2;
     }
 
     if (Object.keys(template.metadata).length > 0) {
-      score += 0.2;
+      heuristicScore += 0.2;
       factors += 0.2;
     }
 
-    return factors > 0 ? score / factors : 0;
+    const normalizedHeuristic = factors > 0 ? heuristicScore / factors : 0;
+    
+    // If analyses provided, incorporate LLM confidence
+    if (analyses && analyses.length > 0) {
+      const avgConfidence = analyses.reduce((sum, a) => sum + a.confidence, 0) / analyses.length;
+      // Weight: 60% heuristic + 40% LLM confidence
+      return (normalizedHeuristic * 0.6) + (avgConfidence * 0.4);
+    }
+    
+    return normalizedHeuristic;
   }
 
   private generateFeedback(template: DocumentTemplate, score: number): string {

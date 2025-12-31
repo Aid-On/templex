@@ -122,16 +122,18 @@ export function validateDocumentTemplate(template: DocumentTemplate): DocumentTe
   if (!Array.isArray(template.keywords)) {
     template.keywords = [];
   } else {
-    template.keywords = template.keywords.map(kw => {
-      if (typeof kw === 'string') {
-        return { term: kw, weight: 1, context: 'general' };
-      }
-      return {
-        term: kw.term || '',
-        weight: validateWeight(kw.weight),
-        context: kw.context || 'general'
-      };
-    });
+    template.keywords = template.keywords
+      .map(kw => {
+        if (typeof kw === 'string') {
+          return { term: kw, weight: 1, context: 'general' };
+        }
+        return {
+          term: kw.term || '',
+          weight: validateWeight(kw.weight),
+          context: kw.context || 'general'
+        };
+      })
+      .filter(kw => kw.term.trim() !== ''); // Filter out empty keywords
   }
 
   return template;

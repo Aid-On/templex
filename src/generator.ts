@@ -1,5 +1,23 @@
+import type { AbstractTemplate, LLMProvider } from './types';
 import { generate } from '@aid-on/unillm';
-import type { AbstractTemplate } from './types';
+
+// Factory function to create LLMProvider from unillm
+export function createUnillmProvider(modelSpec: string, apiKeys?: any): LLMProvider {
+  return {
+    chat: async (systemPrompt: string, userPrompt: string, options?: any) => {
+      const messages = [
+        { role: 'system' as const, content: systemPrompt },
+        { role: 'user' as const, content: userPrompt }
+      ];
+      const result = await generate(modelSpec, messages, {
+        ...apiKeys,
+        temperature: options?.temperature,
+        maxTokens: options?.maxTokens
+      });
+      return result.text;
+    }
+  };
+}
 
 export interface ArticleData {
   topic: string;
@@ -17,24 +35,17 @@ export interface ArticleData {
 }
 
 export interface GeneratorOptions {
-  model?: string;
   temperature?: number;
   maxTokens?: number;
   systemPrompt?: string;
-  apiKeys?: {
-    groqApiKey?: string;
-    openaiApiKey?: string;
-    anthropicApiKey?: string;
-    geminiApiKey?: string;
-  };
 }
 
 export class ArticleGenerator {
-  private defaultModel: string;
+  private provider: LLMProvider;
   private defaultOptions: GeneratorOptions;
 
-  constructor(defaultModel: string = 'groq:mixtral-8x7b-32768', defaultOptions?: GeneratorOptions) {
-    this.defaultModel = defaultModel;
+  constructor(provider: LLMProvider, defaultOptions?: GeneratorOptions) {
+    this.provider = provider;
     this.defaultOptions = {
       temperature: 0.7,
       maxTokens: 3000,
@@ -51,22 +62,18 @@ export class ArticleGenerator {
     const prompt = this.buildPrompt(template, data);
     
     const mergedOptions = { ...this.defaultOptions, ...options };
-    const model = mergedOptions.model || this.defaultModel;
+    const systemPrompt = mergedOptions.systemPrompt || this.defaultOptions.systemPrompt!;
     
-    const messages = [
+    const result = await this.provider.chat(
+      systemPrompt,
+      prompt,
       {
-        role: 'system' as const,
-        content: mergedOptions.systemPrompt || this.defaultOptions.systemPrompt!
-      },
-      {
-        role: 'user' as const,
-        content: prompt
+        temperature: mergedOptions.temperature,
+        maxTokens: mergedOptions.maxTokens
       }
-    ];
-    
-    const result = await generate(model, messages, mergedOptions.apiKeys || {});
+    );
 
-    return result.text;
+    return result;
   }
 
   private buildPrompt(template: AbstractTemplate, data: ArticleData): string {
