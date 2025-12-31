@@ -1,8 +1,8 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'fs';
-import { TemplateExtractor, formatTemplate } from './src';
-import type { LLMProvider } from './src/types';
+import { TemplateExtractor, formatTemplate } from '../src';
+import type { LLMProvider } from '../src/types';
 
 // Simple mock provider for testing without real LLM
 class MockLLMProvider implements LLMProvider {

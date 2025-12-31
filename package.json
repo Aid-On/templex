@@ -47,6 +47,9 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src tests --ext .ts",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "cli:extract": "tsx cli/cli.ts",
+    "cli:generate": "tsx cli/cli-generate.ts",
+    "cli:help": "tsx cli/cli.ts --help && tsx cli/cli-generate.ts --help",
     "prepublishOnly": "npm run build && npm run test",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
