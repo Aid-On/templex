@@ -7,7 +7,7 @@
  * @example
  * ```typescript
  * import { TemplateExtractor } from '@aid-on/templex';
- * import { createOpenAIProvider } from '@aid-on/unilmp';
+ * import { createOpenAIProvider } from '@aid-on/unillm';
  * 
  * const extractor = new TemplateExtractor({
  *   provider: createOpenAIProvider({ apiKey: 'xxx' }),
