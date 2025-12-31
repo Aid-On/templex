@@ -1,81 +1,78 @@
 # @aid-on/templex
 
-[![npm version](https://badge.fury.io/js/@aid-on%2Ftemplex.svg)](https://www.npmjs.com/package/@aid-on/templex)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Extract reusable writing templates from any text using AI, then generate new content with those patterns.
 
-Template Extractor - AIを使用してテキストから抽象的なテンプレートとドキュメント構造を抽出するライブラリ
+## What is Templex?
 
-## 特徴
+Templex analyzes articles, blog posts, or any text to identify their underlying structure and persuasion techniques. It extracts these patterns as reusable templates that you can use to generate similar content on different topics.
 
-- 📝 **テンプレート抽出**: 記事やテキストから再利用可能なテンプレートパターンを自動抽出
-- 🔄 **記事生成**: 抽出したテンプレートを使用して新しい記事を生成
-- 🌍 **多言語対応**: 日本語と英語のプロンプトをサポート
-- 🧩 **柔軟な統合**: `@aid-on/unillm`を使用して複数のLLMプロバイダーに対応
-- 📊 **進捗追跡**: リアルタイムで処理の進捗を追跡
-- 🔍 **高度な分析**: 文書構造、キーワード、説得技法を分析
+Think of it as "learning the recipe" from existing content, not just copying it.
 
-## インストール
+## Features
+
+- **Template Extraction** - Identifies document structure, flow patterns, and rhetorical techniques
+- **Pattern Recognition** - Detects persuasion methods like problem-solution, storytelling, or comparison formats  
+- **Content Generation** - Creates new articles using extracted templates with your own topics and data
+- **Multi-Language** - Supports both English and Japanese prompts
+- **Progress Tracking** - Real-time updates during extraction process
+- **Flexible Integration** - Works with multiple LLM providers via [@aid-on/unillm](https://www.npmjs.com/package/@aid-on/unillm)
+
+## Installation
 
 ```bash
 npm install @aid-on/templex
 ```
 
-または
+## Quick Start
 
-```bash
-pnpm add @aid-on/templex
-```
-
-## 使用方法
-
-### 基本的な使用例
+### 1. Extract a template from existing content
 
 ```typescript
-import { TemplateExtractor, ArticleGenerator } from '@aid-on/templex';
+import { TemplateExtractor } from '@aid-on/templex';
 import { generate } from '@aid-on/unillm';
 
-// LLMプロバイダーの設定
+// Create an LLM provider
 const provider = {
-  chat: async (systemPrompt, userPrompt, options) => {
-    const messages = [
+  chat: async (systemPrompt, userPrompt) => {
+    const result = await generate('gemini:gemini-2.0-flash', [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt }
-    ];
-    const result = await generate('gemini:gemini-2.0-flash', messages, {
+    ], {
       geminiApiKey: process.env.GEMINI_API_KEY
     });
     return result.text;
   }
 };
 
-// テンプレート抽出
+// Extract template from an article
 const extractor = new TemplateExtractor({
   provider,
-  language: 'ja',
+  language: 'en',
   extractPatterns: true,
   extractKeywords: true
 });
 
-const articleText = `
-# AIで変わる未来のビジネス
+const article = `
+# Why Every Business Needs AI Now
 
-## なぜ今AIなのか
-多くの企業が直面している課題...
+Did you know that 70% of businesses are losing money to inefficiency?
 
-## 現状の非効率性
-- 手動プロセスによる時間の浪費
-- ヒューマンエラーによる品質のばらつき
+## The Problem
+Manual processes are killing productivity...
 
-## AI導入による革新
-AIテクノロジーを活用することで...
+## The Solution  
+AI automation can transform your operations...
+
+## Take Action
+Start your free trial today!
 `;
 
-const result = await extractor.extract(articleText);
-console.log('抽出されたテンプレート:', result.template);
-console.log('信頼度:', result.confidence);
+const result = await extractor.extract(article);
+console.log('Extracted template:', result.template);
+console.log('Confidence:', result.confidence);
 ```
 
-### 記事生成
+### 2. Generate new content with the template
 
 ```typescript
 import { ArticleGenerator } from '@aid-on/templex';
@@ -84,130 +81,127 @@ const generator = new ArticleGenerator('gemini:gemini-2.0-flash', {
   apiKeys: { geminiApiKey: process.env.GEMINI_API_KEY }
 });
 
-// 抽出したテンプレートを使用
+// Use the extracted template to generate new content
 const newArticle = await generator.generate(
   result.template.abstractTemplate,
   {
-    topic: 'リモートワーク効率化',
-    fearHook: 'リモートワークの生産性が低下していませんか？',
-    solution: 'AI支援ツールで効率を2倍に',
-    cta: '無料トライアルを今すぐ開始'
+    topic: 'Cloud Migration',
+    fearHook: 'Is your on-premise infrastructure draining your budget?',
+    solution: 'Cloud services that scale with your needs',
+    cta: 'Get a free cloud assessment'
   }
 );
 
 console.log(newArticle);
 ```
 
-### プリセットパターンの使用
+## Template Patterns
 
+Templex recognizes common content patterns:
+
+### Problem-Solution
 ```typescript
-// Fear-Drivenパターンで記事を生成
-const article = await generator.generateFromPattern('fear-driven', {
-  topic: 'サイバーセキュリティ',
-  fearHook: 'あなたの会社のデータは本当に安全ですか？',
-  evidence: '昨年のサイバー攻撃は40%増加',
-  solution: 'AI駆動型セキュリティシステム',
-  urgency: '今なら初期費用50%OFF',
-  cta: '無料診断を申し込む'
+const article = await generator.generateFromPattern('problem-solution', {
+  topic: 'Remote Work Productivity',
+  problem: 'Teams struggling with collaboration',  
+  solution: 'Integrated communication platform',
+  benefits: ['30% faster decisions', 'Better work-life balance']
 });
 ```
 
-### 進捗追跡
+### Fear-Driven Persuasion
+```typescript
+const article = await generator.generateFromPattern('fear-driven', {
+  topic: 'Cybersecurity',
+  fearHook: 'Your data could be stolen right now',
+  evidence: 'Cyber attacks increased 40% this year',
+  solution: 'AI-powered threat detection',
+  urgency: 'Limited time offer - 50% off setup'
+});
+```
+
+## API Reference
+
+### TemplateExtractor
+
+Extracts templates from text.
 
 ```typescript
-const extractor = new TemplateExtractor(config);
+new TemplateExtractor(config: ExtractionConfig)
+```
 
+**Config Options:**
+- `provider` - LLM provider for analysis
+- `language` - 'en' or 'ja' (default: 'en')  
+- `extractPatterns` - Extract writing patterns
+- `extractKeywords` - Extract key terms
+- `maxDepth` - Iterations for refinement
+- `useIterativeRefinement` - Enable multi-pass analysis
+
+### ArticleGenerator  
+
+Generates content from templates.
+
+```typescript
+new ArticleGenerator(model: string, options?: GeneratorOptions)
+```
+
+**Options:**
+- `temperature` - Creativity level (0-1)
+- `maxTokens` - Maximum output length
+- `apiKeys` - API credentials for providers
+
+### Template Structure
+
+Extracted templates contain:
+
+```typescript
+{
+  name: string;           // e.g., "Problem-Solution"
+  formula: string;        // e.g., "[Hook] + [Problem] + [Solution]"
+  components: [{
+    name: string;         // e.g., "Hook"
+    purpose: string;      // e.g., "Grab attention"
+    examples: string[];   // Actual examples from source
+    patterns: string[];   // Common patterns used
+    weight: number;       // Importance (0-1)
+  }],
+  flow: string;          // e.g., "Linear", "Circular"
+  persuasionTechniques: string[];  // e.g., ["urgency", "social proof"]
+}
+```
+
+## Progress Tracking
+
+Monitor extraction progress:
+
+```typescript
 const result = await extractor.extract(article, {
   onProgress: (progress) => {
     console.log(`${progress.phase}: ${progress.current}/${progress.total}`);
-    // 出力例:
-    // chunking: 1/5
-    // analyzing: 3/5
-    // refining: 1/1
-    // finalizing: 1/1
   }
 });
 ```
 
-## API
-
-### TemplateExtractor
-
-テキストからテンプレートを抽出するメインクラス
-
-#### コンストラクタオプション
-
-```typescript
-interface ExtractionConfig {
-  provider: LLMProvider;           // LLMプロバイダー
-  language?: 'ja' | 'en';          // 言語設定（デフォルト: 'ja'）
-  maxDepth?: number;               // 反復処理の最大深度
-  minConfidence?: number;          // 最小信頼度閾値
-  extractPatterns?: boolean;       // パターン抽出の有効化
-  extractKeywords?: boolean;       // キーワード抽出の有効化
-  extractMetadata?: boolean;       // メタデータ抽出の有効化
-  useIterativeRefinement?: boolean; // 反復的改善の使用
-}
-```
-
-### ArticleGenerator
-
-テンプレートを使用して記事を生成
-
-#### コンストラクタオプション
-
-```typescript
-interface GeneratorOptions {
-  model?: string;           // 使用するモデル
-  temperature?: number;     // 生成の温度パラメータ
-  maxTokens?: number;       // 最大トークン数
-  systemPrompt?: string;    // システムプロンプト
-  apiKeys?: {              // APIキー
-    groqApiKey?: string;
-    geminiApiKey?: string;
-    openaiApiKey?: string;
-  };
-}
-```
-
-### 抽出されるテンプレート構造
-
-```typescript
-interface AbstractTemplate {
-  name: string;                    // テンプレート名
-  formula: string;                 // 構成式
-  components: Array<{
-    name: string;                  // コンポーネント名
-    purpose: string;               // 目的
-    examples: string[];            // 実例
-    patterns: string[];            // パターン
-    position: number;              // 位置
-    weight: number;                // 重要度 (0-1)
-  }>;
-  flow: string;                    // 情報の流れ
-  persuasionTechniques: string[];  // 説得技法
-}
-```
-
-## 必要な環境
+## Requirements
 
 - Node.js >= 20.0.0
 - TypeScript >= 5.0.0
 
-## 依存関係
+## Dependencies
 
-- `@aid-on/unillm` - 統一LLMインターフェース
-- `@aid-on/fractop` - フラクタル処理
-- `@aid-on/iteratop` - 反復処理
+- [@aid-on/unillm](https://www.npmjs.com/package/@aid-on/unillm) - Unified LLM interface
+- [@aid-on/fractop](https://www.npmjs.com/package/@aid-on/fractop) - Fractal processing for long documents
+- [@aid-on/iteratop](https://www.npmjs.com/package/@aid-on/iteratop) - Iterative refinement
 
-## ライセンス
+## License
 
 MIT
 
-## 貢献
+## Contributing
 
-プルリクエストを歓迎します。大きな変更の場合は、まずissueを開いて変更内容を議論してください。
+PRs welcome! Please open an issue first for major changes.
 
-## サポート
+## Support
 
-問題が発生した場合は、[GitHubのissue](https://github.com/Aid-On/aid-on-platform/issues)を作成してください。
+Report issues at [GitHub Issues](https://github.com/Aid-On/templex/issues)
