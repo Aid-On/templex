@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ArticleGenerator, type ArticleData, type GeneratorOptions } from '../src/generator';
-import type { AbstractTemplate } from '../src/types';
-import type { LLMProvider } from '@aid-on/unillm';
+import { ArticleGenerator, type ArticleData, type GeneratorOptions } from '../../src/generator';
+import type { AbstractTemplate, LLMProvider } from '../../src/types';
 
 describe('ArticleGenerator', () => {
   let mockProvider: LLMProvider;
@@ -9,9 +8,9 @@ describe('ArticleGenerator', () => {
 
   beforeEach(() => {
     mockProvider = {
-      generateText: vi.fn().mockResolvedValue({
-        text: '# Generated Article\n\nThis is the generated content.'
-      })
+      chat: vi.fn().mockResolvedValue(
+        '# Generated Article\n\nThis is the generated content.'
+      )
     } as any;
 
     generator = new ArticleGenerator(mockProvider);
@@ -23,18 +22,13 @@ describe('ArticleGenerator', () => {
       expect(gen).toBeDefined();
     });
 
-    it('should create generator with custom default model', () => {
-      const gen = new ArticleGenerator(mockProvider, 'gpt-3.5-turbo');
-      expect(gen).toBeDefined();
-    });
-
     it('should create generator with custom default options', () => {
       const options: GeneratorOptions = {
         temperature: 0.5,
         maxTokens: 2000,
         systemPrompt: 'Custom system prompt'
       };
-      const gen = new ArticleGenerator(mockProvider, 'gpt-4', options);
+      const gen = new ArticleGenerator(mockProvider, options);
       expect(gen).toBeDefined();
     });
   });
@@ -95,7 +89,7 @@ describe('ArticleGenerator', () => {
       
       expect(result).toBeDefined();
       expect(result).toContain('Generated Article');
-      expect(mockProvider.generateText).toHaveBeenCalledWith(
+      expect(mockProvider.chat).toHaveBeenCalledWith(
         expect.objectContaining({
           messages: expect.arrayContaining([
             expect.objectContaining({ role: 'system' }),
@@ -118,7 +112,7 @@ describe('ArticleGenerator', () => {
       
       await generator.generate(testTemplate, testData, options);
       
-      expect(mockProvider.generateText).toHaveBeenCalledWith(
+      expect(mockProvider.chat).toHaveBeenCalledWith(
         expect.objectContaining({
           model: 'gpt-3.5-turbo',
           temperature: 0.9,
@@ -136,8 +130,8 @@ describe('ArticleGenerator', () => {
     it('should build prompt with all template components', async () => {
       await generator.generate(testTemplate, testData);
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('Test Template');
       expect(userPrompt).toContain('[Hook] + [Problem] + [Solution]');
@@ -149,8 +143,8 @@ describe('ArticleGenerator', () => {
     it('should include article data in prompt', async () => {
       await generator.generate(testTemplate, testData);
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('AI in Business');
       expect(userPrompt).toContain('Your competitors are already using AI');
@@ -168,8 +162,8 @@ describe('ArticleGenerator', () => {
       const result = await generator.generate(testTemplate, partialData);
       expect(result).toBeDefined();
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('Simple Topic');
       expect(userPrompt).not.toContain('恐怖フック: undefined');
@@ -182,8 +176,8 @@ describe('ArticleGenerator', () => {
       };
       
       await generator.generate(testTemplate, dataWithoutExamples);
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).not.toContain('業界別事例:');
     });
@@ -200,10 +194,10 @@ describe('ArticleGenerator', () => {
       const result = await generator.generateFromPattern('fear-driven', data);
       
       expect(result).toBeDefined();
-      expect(mockProvider.generateText).toHaveBeenCalled();
+      expect(mockProvider.chat).toHaveBeenCalled();
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('Fear-Driven Persuasion');
       expect(userPrompt).toContain('恐怖フック');
@@ -219,8 +213,8 @@ describe('ArticleGenerator', () => {
       
       expect(result).toBeDefined();
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('Problem-Solution Framework');
       expect(userPrompt).toContain('問題提起');
@@ -237,7 +231,7 @@ describe('ArticleGenerator', () => {
 
   describe('error handling', () => {
     it('should handle provider errors', async () => {
-      mockProvider.generateText = vi.fn().mockRejectedValue(
+      mockProvider.chat = vi.fn().mockRejectedValue(
         new Error('Provider error')
       );
       
@@ -255,7 +249,7 @@ describe('ArticleGenerator', () => {
     });
 
     it('should handle network errors', async () => {
-      mockProvider.generateText = vi.fn().mockRejectedValue(
+      mockProvider.chat = vi.fn().mockRejectedValue(
         new Error('Network timeout')
       );
       
@@ -288,8 +282,8 @@ describe('ArticleGenerator', () => {
       
       await generator.generate(template, data);
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('Component 1');
       expect(userPrompt).toContain('Purpose 1');
@@ -308,8 +302,8 @@ describe('ArticleGenerator', () => {
       
       await generator.generate(template, { topic: 'Test' });
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('マークダウン形式で出力');
       expect(userPrompt).toContain('見出しは階層的に構成');
@@ -339,8 +333,8 @@ describe('ArticleGenerator', () => {
       
       await generator.generate(template, data);
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       expect(userPrompt).toContain('Healthcare: Hospital A - 50% efficiency gain');
       expect(userPrompt).toContain('Finance: Bank B - 30% cost reduction');
@@ -352,8 +346,8 @@ describe('ArticleGenerator', () => {
     it('should have correct fear-driven pattern structure', async () => {
       await generator.generateFromPattern('fear-driven', { topic: 'Test' });
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       // Check all 6 components of fear-driven pattern
       expect(userPrompt).toContain('恐怖フック');
@@ -367,8 +361,8 @@ describe('ArticleGenerator', () => {
     it('should have correct problem-solution pattern structure', async () => {
       await generator.generateFromPattern('problem-solution', { topic: 'Test' });
       
-      const callArgs = (mockProvider.generateText as any).mock.calls[0][0];
-      const userPrompt = callArgs.messages[1].content;
+      const callArgs = (mockProvider.chat as any).mock.calls[0];
+      const userPrompt = callArgs[1];
       
       // Check all 5 components of problem-solution pattern
       expect(userPrompt).toContain('問題提起');

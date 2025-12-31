@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { generate } from '@aid-on/unillm';
-import { TemplateExtractor } from '../src/core';
-import { ArticleGenerator } from '../src/generator';
-import type { LLMProvider, ExtractionConfig, ArticleData } from '../src/types';
+import { TemplateExtractor } from '../../src/core';
+import { ArticleGenerator, createUnillmProvider } from '../../src/generator';
+import type { LLMProvider, ExtractionConfig, ArticleData } from '../../src/types';
 
 describe('Unillm Integration Tests', () => {
   const groqApiKey = process.env.GROQ_API_KEY;
@@ -83,9 +83,8 @@ AIテクノロジーを活用することで、これらの問題を根本的に
     });
 
     it.skipIf(!hasApiKey)('should generate article using unillm directly', { timeout: 30000 }, async () => {
-      const generator = new ArticleGenerator('gemini:gemini-2.0-flash', {
-        apiKeys: { geminiApiKey }
-      });
+      const provider = createUnillmProvider('gemini:gemini-2.0-flash', { geminiApiKey });
+      const generator = new ArticleGenerator(provider);
 
       const template = {
         name: 'Simple Problem-Solution',
@@ -213,9 +212,8 @@ A社では導入後3ヶ月で投資を回収。
 
       // Step 2: Generate new article using extracted structure
       if (extractResult.template.abstractTemplate) {
-        const generator = new ArticleGenerator('gemini:gemini-2.0-flash', {
-          apiKeys: { geminiApiKey }
-        });
+        const provider = createUnillmProvider('gemini:gemini-2.0-flash', { geminiApiKey });
+        const generator = new ArticleGenerator(provider);
 
         const newData: ArticleData = {
           topic: 'クラウド移行',
