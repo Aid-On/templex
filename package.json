@@ -1,0 +1,75 @@
+{
+  "name": "@aid-on/templex",
+  "version": "0.1.0",
+  "description": "Templex - Template Extractor for extracting abstract templates and document structures from articles and text",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aid-On/aid-on-platform.git",
+    "directory": "packages/templex"
+  },
+  "bugs": {
+    "url": "https://github.com/Aid-On/aid-on-platform/issues"
+  },
+  "homepage": "https://github.com/Aid-On/aid-on-platform/tree/main/packages/templex#readme",
+  "author": "Aid-On Team",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "postbuild": "npm run typecheck",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run integration-tests/*.test.ts",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src tests --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "prepublishOnly": "npm run build && npm run test",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [
+    "llm",
+    "template",
+    "extraction",
+    "document-structure",
+    "abstraction",
+    "text-processing",
+    "article-analysis",
+    "ai"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@aid-on/fractop": "^0.5.0",
+    "@aid-on/iteratop": "^0.2.1",
+    "@aid-on/unillm": "^0.3.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
