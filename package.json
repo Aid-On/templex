@@ -1,16 +1,19 @@
 {
   "name": "@aid-on/templex",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Templex - Template Extractor for extracting abstract templates and document structures from articles and text",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "README.md",
@@ -30,7 +33,8 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
+    "build:tsc": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "vitest run tests/unit",
     "test:watch": "vitest tests/unit",
@@ -51,11 +55,12 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@aid-on/fractop": "^0.5.0",
-    "@aid-on/iteratop": "^0.2.1",
-    "@aid-on/unillm": "^0.3.0"
+    "@aid-on/fractop": "^0.6.2",
+    "@aid-on/iteratop": "^0.3.1",
+    "@aid-on/unillm": "^0.5.1"
   },
   "devDependencies": {
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

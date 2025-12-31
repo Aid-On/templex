@@ -22,8 +22,8 @@
  */
 
 // Core
-export { TemplateExtractor } from './core';
-export { ArticleGenerator, createUnillmProvider } from './generator';
+export { TemplateExtractor } from './core.js';
+export { ArticleGenerator, createUnillmProvider } from './generator.js';
 
 // Types
 export type {
@@ -35,8 +35,8 @@ export type {
   ExtractionOptions,
   ExtractionResult,
   ChunkAnalysis,
-} from './types';
-export type { ArticleData, GeneratorOptions } from './generator';
+} from './types.js';
+export type { ArticleData, GeneratorOptions } from './generator.js';
 
 // Utilities
 export {
@@ -44,14 +44,14 @@ export {
   mergeTemplates,
   simplifyTemplate,
   compareTemplates,
-} from './utils';
+} from './utils.js';
 
 export {
   extractJSON,
   parseJSONSafe,
   formatForLLM,
   createValidator,
-} from './json-utils';
+} from './json-utils.js';
 
 export {
   normalizeKeyword,
@@ -62,8 +62,8 @@ export {
   groupByContext,
   toDocumentKeywords,
   toStringArray,
-} from './keyword-utils';
-export type { NormalizedKeyword } from './keyword-utils';
+} from './keyword-utils.js';
+export type { NormalizedKeyword } from './keyword-utils.js';
 
 // Pattern presets
-export { PRESET_PATTERNS, getPresetPattern } from './patterns';
+export { PRESET_PATTERNS, getPresetPattern } from './patterns.js';

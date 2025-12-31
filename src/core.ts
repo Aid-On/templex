@@ -9,14 +9,14 @@ import type {
   ChunkAnalysis,
   TemplateElement,
   LLMProvider
-} from './types';
-import { PromptBuilder, type PromptLanguage } from './prompts';
-import { validateExtractionConfig, validateChunkAnalysis, validateDocumentTemplate } from './validation';
-import { mergeElementLists } from './similarity';
-import { normalizeKeywords, mergeKeywordLists, toDocumentKeywords, keywordListSimilarity } from './keyword-utils';
-import { extractJSON } from './json-utils';
-import { StructureMerger, MergeStrategyFactory } from './structure-merger';
-import { parseTemplateElements, parsePatterns, parseAbstractTemplate } from './type-guards';
+} from './types.js';
+import { PromptBuilder, type PromptLanguage } from './prompts.js';
+import { validateExtractionConfig, validateChunkAnalysis, validateDocumentTemplate } from './validation.js';
+import { mergeElementLists } from './similarity.js';
+import { normalizeKeywords, mergeKeywordLists, toDocumentKeywords, keywordListSimilarity } from './keyword-utils.js';
+import { extractJSON } from './json-utils.js';
+import { StructureMerger, MergeStrategyFactory } from './structure-merger.js';
+import { parseTemplateElements, parsePatterns, parseAbstractTemplate } from './type-guards.js';
 
 export class TemplateExtractor {
   private config: Required<ExtractionConfig>;
@@ -247,7 +247,7 @@ export class TemplateExtractor {
         iteration: 0
       }),
 
-      act: async (state) => {
+      act: async (state: any) => {
         const refinedTemplate = await this.refineTemplateStep(
           state.template,
           state.analyses
@@ -255,7 +255,7 @@ export class TemplateExtractor {
         return { data: refinedTemplate };
       },
 
-      evaluate: async (state, actionResult) => {
+      evaluate: async (state: any, actionResult: any) => {
         const score = this.evaluateTemplate(actionResult.data, state.analyses);
         return {
           score,
@@ -264,13 +264,13 @@ export class TemplateExtractor {
         };
       },
 
-      transition: async (state, actionResult) => ({
+      transition: async (state: any, actionResult: any) => ({
         ...state,
         template: actionResult.data,
         iteration: state.iteration + 1
       }),
 
-      finalize: async (state) => state.template
+      finalize: async (state: any) => state.template
     });
 
     const result = await iterator.run(analyses);

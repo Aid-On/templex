@@ -3,9 +3,9 @@
  * Implements various merging strategies for document structures
  */
 
-import type { TemplateElement } from './types';
-import { mergeElementLists } from './similarity';
-import { keywordListSimilarity } from './keyword-utils';
+import type { TemplateElement } from './types.js';
+import { mergeElementLists } from './similarity.js';
+import { keywordListSimilarity } from './keyword-utils.js';
 
 /**
  * Interface for merge strategy

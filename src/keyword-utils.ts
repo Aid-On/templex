@@ -3,7 +3,7 @@
  * Normalizes keywords to a consistent internal format
  */
 
-import type { DocumentTemplate } from './types';
+import type { DocumentTemplate } from './types.js';
 
 /**
  * Normalized keyword format used internally
