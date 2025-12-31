@@ -1,4 +1,4 @@
-import type { TemplateElement } from './types';
+import type { TemplateElement } from './types.js';
 
 /**
  * Calculate Levenshtein distance between two strings

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git tag:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(npm:*)",
+      "Bash(cat:*)",
+      "Bash(node:*)",
+      "Bash(for file in dist/*.js)",
+      "Bash(do sed -i '' \"s/from ''\\.\\//from ''.\\//g; s/''\\([^'']*\\)''/''\\1.js''/g\" \"$file\")",
+      "Bash(done)",
+      "Bash(do sed -i '' \"s/from ''\\.\\/\\([^'']*\\)''/from ''.\\/\\1.js''/g\" \"$file\")",
+      "Bash(for file in src/*.ts)",
+      "Bash(do sed -i '' \"s/from ''\\.\\/\\([^'']*\\)''/from ''.\\/\\1.js''/g\" \"$file\")",
+      "Bash(for file in utils.ts builder.ts stream.ts core.ts)",
+      "Bash(do sed -i '' \"s/from ''\\.\\/\\([^'']*\\)''/from ''.\\/\\1.js''/g\" $file)",
+      "Bash(npx vite:*)",
+      "Bash(gh release create:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "/private/tmp/templex-test",
+      "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/nagare",
+      "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/fractop",
+      "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/unillm"
+    ]
+  }
+}

@@ -7,7 +7,7 @@ import type {
   AbstractTemplate,
   DocumentTemplate,
   ChunkAnalysis
-} from './types';
+} from './types.js';
 
 /**
  * Check if value is a TemplateElement

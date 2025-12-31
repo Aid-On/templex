@@ -1,4 +1,4 @@
-import type { DocumentTemplate, TemplateElement } from './types';
+import type { DocumentTemplate, TemplateElement } from './types.js';
 
 export function formatTemplate(template: DocumentTemplate): string {
   const lines: string[] = [];

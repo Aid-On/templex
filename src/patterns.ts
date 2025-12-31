@@ -1,4 +1,4 @@
-import type { AbstractTemplate } from './types';
+import type { AbstractTemplate } from './types.js';
 
 /**
  * Predefined article generation patterns
