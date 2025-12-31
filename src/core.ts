@@ -1,7 +1,8 @@
-import { FractalProcessor } from '@aid-on/fractop';
+import { FractalProcessor, type ChunkContext } from '@aid-on/fractop';
 import { createIterator } from '@aid-on/iteratop';
 import type {
   DocumentTemplate,
+  AbstractTemplate,
   ExtractionConfig,
   ExtractionOptions,
   ExtractionResult,
@@ -12,36 +13,46 @@ import type {
 import { PromptBuilder, type PromptLanguage } from './prompts';
 import { validateExtractionConfig, validateChunkAnalysis, validateDocumentTemplate } from './validation';
 import { mergeElementLists } from './similarity';
+import { normalizeKeywords, mergeKeywordLists, toDocumentKeywords, keywordListSimilarity } from './keyword-utils';
+import { extractJSON } from './json-utils';
+import { StructureMerger, MergeStrategyFactory } from './structure-merger';
+import { parseTemplateElements, parsePatterns, parseAbstractTemplate } from './type-guards';
 
 export class TemplateExtractor {
   private config: Required<ExtractionConfig>;
-  private fractalProcessor: FractalProcessor<ChunkAnalysis>;
-  private lastAbstractTemplate?: any;
+  private lastAbstractTemplate?: AbstractTemplate;
   private promptBuilder: PromptBuilder;
+  private structureMerger: StructureMerger;
 
   constructor(config: ExtractionConfig) {
     // Validate and normalize configuration
     this.config = validateExtractionConfig(config);
 
-    this.promptBuilder = new PromptBuilder(
-      this.config.language as PromptLanguage || 'ja'
-    );
+    const language: PromptLanguage = 
+      this.config.language === 'en' ? 'en' : 'ja';
+    this.promptBuilder = new PromptBuilder(language);
 
-    this.fractalProcessor = new FractalProcessor<ChunkAnalysis>(
-      config.provider,
-      {
-        chunkSize: 2000,
-        overlapSize: 200,
-        maxRetries: 3,
-        timeout: 30000,
-      }
-    );
+    // Initialize structure merger with semantic strategy
+    const mergeStrategy = MergeStrategyFactory.create('semantic');
+    this.structureMerger = new StructureMerger(mergeStrategy);
   }
 
   async extract(text: string, options: ExtractionOptions = {}): Promise<ExtractionResult> {
     const startTime = Date.now();
     const errors: string[] = [];
     const { onProgress } = options;
+
+    // Initialize FractalProcessor with user-provided options
+    const fractalProcessor = new FractalProcessor<ChunkAnalysis>(
+      this.config.provider,
+      {
+        chunkSize: options.chunkSize || 2000,
+        overlapSize: options.overlapRatio ? 
+          Math.floor((options.chunkSize || 2000) * options.overlapRatio) : 200,
+        maxRetries: options.retries || 3,
+        timeout: options.timeout || 30000,
+      }
+    );
 
     try {
       // Step 1: Use FractalProcessor to analyze chunks
@@ -54,7 +65,7 @@ export class TemplateExtractor {
         });
       }
       
-      const chunkAnalyses = await this.analyzeChunks(text, options);
+      const chunkAnalyses = await this.analyzeChunks(text, options, fractalProcessor);
 
       // Step 2: Use IterationProcessor to refine template
       if (onProgress) {
@@ -100,21 +111,31 @@ export class TemplateExtractor {
         errors: errors.length > 0 ? errors : undefined
       };
     } catch (error) {
-      errors.push(error instanceof Error ? error.message : String(error));
-      throw new Error(`Template extraction failed: ${errors.join(', ')}`);
+      const message = error instanceof Error ? error.message : String(error);
+      errors.push(message);
+      
+      // Create error with cause for better debugging (ES2022+)
+      throw new Error(`Template extraction failed: ${errors.join(', ')}`, {
+        cause: error
+      });
     }
   }
 
-  private async analyzeChunks(text: string, options: ExtractionOptions): Promise<ChunkAnalysis[]> {
+  private async analyzeChunks(
+    text: string, 
+    options: ExtractionOptions,
+    fractalProcessor: FractalProcessor<ChunkAnalysis>
+  ): Promise<ChunkAnalysis[]> {
     const prompt = this.promptBuilder.getAnalysisPrompt();
     const { onProgress } = options;
     
     let processedChunks = 0;
     const estimatedChunks = Math.ceil(text.length / (options.chunkSize || 2000));
+    let hadError = false;
     
-    const items = await this.fractalProcessor.process(text, {
+    const items = await fractalProcessor.process(text, {
       generateContext: async (text: string) => 'Analyzing document structure',
-      processChunk: async (chunk: string, context) => {
+      processChunk: async (chunk: string, context: ChunkContext) => {
         if (onProgress) {
           onProgress({
             phase: 'analyzing',
@@ -124,10 +145,17 @@ export class TemplateExtractor {
           });
         }
         
-        const response = await this.config.provider.chat(
-          prompt,
-          chunk
-        );
+        let response: string;
+        try {
+          response = await this.config.provider.chat(
+            prompt,
+            chunk
+          );
+        } catch (error) {
+          hadError = true;
+          // Re-throw provider errors to prevent silent failures
+          throw error;
+        }
         
         processedChunks++;
         
@@ -136,7 +164,7 @@ export class TemplateExtractor {
           summary: ''
         };
       },
-      mergeResults: (results) => {
+      mergeResults: (results: ChunkAnalysis[][]) => {
         const flatResults = results.flat();
         
         // If only one result, return as-is
@@ -167,7 +195,7 @@ export class TemplateExtractor {
           needsSupplement: false
         };
       },
-      getKey: (item) => JSON.stringify(item)
+      getKey: (item: ChunkAnalysis) => JSON.stringify(item)
     });
 
     if (onProgress) {
@@ -191,7 +219,7 @@ export class TemplateExtractor {
     // maxDepthが2以上、またはuseIterativeRefinementが明示的にtrueの場合
     const shouldUseIterative = 
       (this.config.maxDepth && this.config.maxDepth > 1) ||
-      (this.config as any).useIterativeRefinement === true;
+      this.config.useIterativeRefinement === true;
 
     if (shouldUseIterative && analyses.length > 1) {
       // 反復的改善による高精度な統合
@@ -256,91 +284,63 @@ export class TemplateExtractor {
   // Removed - now using PromptBuilder
 
   private parseChunkResult(content: string): ChunkAnalysis {
+    // Define expected shape of parsed JSON
+    interface ParsedAnalysis {
+      elements?: unknown[];
+      keywords?: unknown[];
+      patterns?: Record<string, unknown>;
+      confidence?: number;
+      abstractTemplate?: unknown;
+    }
+    
+    // Use robust JSON extraction utility
+    const parsed = extractJSON<ParsedAnalysis>(content);
+
+    if (!parsed) {
+      console.warn('JSON Parse Failed, attempting partial fallback...');
+      return this.attemptPartialParse(content);
+    }
+
     try {
-      let jsonStr = content;
-
-      // 1. Markdownコードブロックの除去 (複数のパターンに対応)
-      const codeBlockPatterns = [
-        /```(?:json)?\s*([\s\S]*?)```/i,  // ```json or ```
-        /~~~(?:json)?\s*([\s\S]*?)~~~/i,   // ~~~json or ~~~
-      ];
-      
-      for (const pattern of codeBlockPatterns) {
-        const match = content.match(pattern);
-        if (match) {
-          jsonStr = match[1];
-          break;
-        }
-      }
-
-      // 2. 最初と最後の括弧を探して切り出し (JSON以外の冒頭/末尾のゴミを除去)
-      const firstBrace = jsonStr.indexOf('{');
-      const lastBrace = jsonStr.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1) {
-        jsonStr = jsonStr.substring(firstBrace, lastBrace + 1);
-      }
-
-      // 3. コメントとトレイリングカンマの削除
-      jsonStr = jsonStr
-        .replace(/\/\/.*$/gm, '')           // 単一行コメント削除
-        .replace(/\/\*[\s\S]*?\*\//g, '')   // ブロックコメント削除
-        .replace(/,\s*}/g, '}')             // オブジェクト末尾のカンマ削除
-        .replace(/,\s*\]/g, ']');           // 配列末尾のカンマ削除
-
-      // 4. エスケープされていない改行文字を修正
-      jsonStr = jsonStr.replace(/([^\\])\\n/g, '$1\\\\n');
-
-      // Parse the JSON
-      const parsed = JSON.parse(jsonStr);
-      
-      // Validate and normalize the parsed data
       return this.normalizeParsedData(parsed);
     } catch (e) {
-      console.warn('JSON Parse Warning:', e);
-      console.warn('Attempting fallback parsing...');
-      
-      // Fallback: 部分的なパースを試みる
-      try {
-        const fallbackResult = this.attemptPartialParse(content);
-        return fallbackResult;
-      } catch (fallbackError) {
-        console.error('Fallback parsing also failed:', fallbackError);
-        return {
-          elements: [],
-          keywords: [],
-          patterns: {},
-          confidence: 0
-        };
-      }
+      console.warn('Normalization failed:', e);
+      // normalization failed, fallback to partial parse
+      return this.attemptPartialParse(content);
     }
   }
 
-  private normalizeParsedData(parsed: any): ChunkAnalysis {
-    // Extract abstract template if present
-    if (parsed.abstractTemplate) {
-      this.lastAbstractTemplate = parsed.abstractTemplate;
+  private normalizeParsedData(parsed: {
+    elements?: unknown[];
+    keywords?: unknown[];
+    patterns?: Record<string, unknown>;
+    confidence?: number;
+    abstractTemplate?: unknown;
+  }): ChunkAnalysis {
+    // Extract abstract template if present using type guard
+    const abstractTemplate = parseAbstractTemplate(parsed.abstractTemplate);
+    if (abstractTemplate) {
+      this.lastAbstractTemplate = abstractTemplate;
     }
     
-    // Normalize elements if they're strings
-    if (parsed.elements && Array.isArray(parsed.elements)) {
-      parsed.elements = parsed.elements.map((el: any) => {
-        if (typeof el === 'string') {
-          const typeMatch = el.match(/^(\S+)/);
-          const type = typeMatch ? this.normalizeElementType(typeMatch[1]) : 'paragraph';
-          const levelMatch = el.match(/#+(\s)/); 
-          const level = levelMatch ? levelMatch[0].length - 1 : undefined;
-          
-          return { type, level };
-        }
-        return el;
-      });
-    }
+    // Parse elements safely without type assertion
+    const elements = parseTemplateElements(parsed.elements);
     
-    // Build ChunkAnalysis and validate
+    // Normalize keywords to ensure consistent type
+    const normalizedKeywords = normalizeKeywords(parsed.keywords || []);
+    
+    // Parse patterns safely without type assertion
+    const patterns = parsePatterns(parsed.patterns);
+    
+    // Build ChunkAnalysis with parsed data
     const analysis: ChunkAnalysis = {
-      elements: parsed.elements || [],
-      keywords: parsed.keywords || [],
-      patterns: parsed.patterns || {},
+      elements,
+      keywords: normalizedKeywords.map(kw => ({
+        term: kw.term,
+        weight: kw.weight,
+        context: kw.context
+      })),
+      patterns,
       confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.5
     };
     
@@ -351,7 +351,7 @@ export class TemplateExtractor {
   private attemptPartialParse(content: string): ChunkAnalysis {
     const result: ChunkAnalysis = {
       elements: [],
-      keywords: [],
+      keywords: [], // Will be normalized below
       patterns: {},
       confidence: 0.3
     };
@@ -360,7 +360,14 @@ export class TemplateExtractor {
     const keywordsMatch = content.match(/"keywords"\s*:\s*\[(.*?)\]/);
     if (keywordsMatch) {
       try {
-        result.keywords = JSON.parse(`[${keywordsMatch[1]}]`);
+        const rawKeywords = JSON.parse(`[${keywordsMatch[1]}]`);
+        // Normalize keywords to consistent type
+        const normalized = normalizeKeywords(rawKeywords);
+        result.keywords = normalized.map(kw => ({
+          term: kw.term,
+          weight: kw.weight,
+          context: kw.context
+        }));
       } catch {}
     }
 
@@ -381,18 +388,6 @@ export class TemplateExtractor {
     }
 
     return result;
-  }
-  
-  private normalizeElementType(jpType: string): string {
-    const typeMap: Record<string, string> = {
-      '見出し': 'heading',
-      '段落': 'paragraph',
-      'リスト': 'list',
-      '引用': 'quote',
-      'コード': 'code',
-      'セクション': 'section'
-    };
-    return typeMap[jpType] || jpType.toLowerCase();
   }
 
   private initializeTemplate(): DocumentTemplate {
@@ -426,71 +421,19 @@ export class TemplateExtractor {
   }
 
   private mergeStructures(elements: TemplateElement[]): TemplateElement[] {
-    
-    // Group elements by chunk for context-aware merging
-    const chunks: TemplateElement[][] = [];
-    let currentChunk: TemplateElement[] = [];
-    
-    for (const element of elements) {
-      currentChunk.push(element);
-      // Start new chunk on major section changes
-      if (element.type === 'heading' && element.level === 1) {
-        if (currentChunk.length > 0) {
-          chunks.push([...currentChunk]);
-          currentChunk = [];
-        }
-      }
-    }
-    if (currentChunk.length > 0) {
-      chunks.push(currentChunk);
-    }
-    
-    // Merge chunks progressively using similarity-based deduplication
-    if (chunks.length === 0) return [];
-    
-    let result = chunks[0];
-    for (let i = 1; i < chunks.length; i++) {
-      result = mergeElementLists(result, chunks[i]);
-    }
-    
-    return result;
+    // Delegate to structure merger
+    return this.structureMerger.merge(elements);
   }
 
   private mergeKeywords(analyses: ChunkAnalysis[]): DocumentTemplate['keywords'] {
-    const keywordMap = new Map<string, { weight: number; contexts: Set<string> }>();
-
-    for (const analysis of analyses) {
-      for (const keyword of analysis.keywords) {
-        // Handle both string and object formats
-        let term: string;
-        let weight = 1;
-        
-        if (typeof keyword === 'string') {
-          term = keyword;
-        } else if (typeof keyword === 'object' && keyword !== null) {
-          term = (keyword as any).term || (keyword as any).keyword || String(keyword);
-          weight = (keyword as any).weight || 1;
-        } else {
-          continue;
-        }
-        
-        if (!keywordMap.has(term)) {
-          keywordMap.set(term, { weight: 0, contexts: new Set() });
-        }
-        const entry = keywordMap.get(term)!;
-        entry.weight += weight;
-        entry.contexts.add('general');
-      }
-    }
-
-    return Array.from(keywordMap.entries())
-      .map(([term, data]) => ({
-        term,
-        weight: data.weight / analyses.length,
-        context: Array.from(data.contexts).join(', ')
-      }))
-      .sort((a, b) => b.weight - a.weight)
-      .slice(0, 20);
+    // Use unified keyword handling
+    const allKeywords = analyses.map(a => a.keywords || []);
+    const merged = mergeKeywordLists(...allKeywords);
+    
+    // Limit to top 50 keywords
+    const top50 = merged.slice(0, 50);
+    
+    return toDocumentKeywords(top50);
   }
 
   private mergePatterns(analyses: ChunkAnalysis[]): DocumentTemplate['patterns'] {
@@ -579,7 +522,7 @@ export class TemplateExtractor {
     return confidences.reduce((sum, c) => sum + c, 0) / confidences.length;
   }
   
-  private extractAbstractTemplate(analyses: ChunkAnalysis[]): any {
+  private extractAbstractTemplate(analyses: ChunkAnalysis[]): AbstractTemplate | undefined {
     // Return the last extracted abstract template if available
     if (this.lastAbstractTemplate) {
       return this.lastAbstractTemplate;
@@ -587,8 +530,8 @@ export class TemplateExtractor {
     
     // Fallback: try to extract from analyses
     for (const analysis of analyses) {
-      if ((analysis as any).abstractTemplate) {
-        return (analysis as any).abstractTemplate;
+      if (analysis.abstractTemplate) {
+        return analysis.abstractTemplate;
       }
     }
     
