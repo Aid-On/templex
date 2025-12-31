@@ -23,16 +23,20 @@
 
 // Core
 export { TemplateExtractor } from './core';
+export { ArticleGenerator, createUnillmProvider } from './generator';
 
 // Types
 export type {
   TemplateElement,
   DocumentTemplate,
+  AbstractTemplate,
+  LLMProvider,
   ExtractionConfig,
   ExtractionOptions,
   ExtractionResult,
   ChunkAnalysis,
 } from './types';
+export type { ArticleData, GeneratorOptions } from './generator';
 
 // Utilities
 export {
