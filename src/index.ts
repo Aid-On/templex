@@ -45,3 +45,25 @@ export {
   simplifyTemplate,
   compareTemplates,
 } from './utils';
+
+export {
+  extractJSON,
+  parseJSONSafe,
+  formatForLLM,
+  createValidator,
+} from './json-utils';
+
+export {
+  normalizeKeyword,
+  normalizeKeywords,
+  mergeKeywordLists,
+  keywordListSimilarity,
+  filterByWeight,
+  groupByContext,
+  toDocumentKeywords,
+  toStringArray,
+} from './keyword-utils';
+export type { NormalizedKeyword } from './keyword-utils';
+
+// Pattern presets
+export { PRESET_PATTERNS, getPresetPattern } from './patterns';

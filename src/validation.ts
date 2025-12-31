@@ -5,6 +5,7 @@ import type {
   ChunkAnalysis,
   ExtractionConfig
 } from './types';
+import { normalizeKeywords, toDocumentKeywords } from './keyword-utils';
 
 /**
  * Validate weight is between 0 and 1
@@ -118,22 +119,12 @@ export function validateDocumentTemplate(template: DocumentTemplate): DocumentTe
     template.patterns = {};
   }
 
-  // Validate keywords
+  // Validate keywords using unified handling
   if (!Array.isArray(template.keywords)) {
     template.keywords = [];
   } else {
-    template.keywords = template.keywords
-      .map(kw => {
-        if (typeof kw === 'string') {
-          return { term: kw, weight: 1, context: 'general' };
-        }
-        return {
-          term: kw.term || '',
-          weight: validateWeight(kw.weight),
-          context: kw.context || 'general'
-        };
-      })
-      .filter(kw => kw.term.trim() !== ''); // Filter out empty keywords
+    const normalized = normalizeKeywords(template.keywords);
+    template.keywords = toDocumentKeywords(normalized);
   }
 
   return template;
@@ -149,23 +140,14 @@ export function validateChunkAnalysis(analysis: ChunkAnalysis): ChunkAnalysis {
       : [],
     keywords: Array.isArray(analysis.keywords) 
       ? (() => {
-          // Check if all items are strings
-          const allStrings = analysis.keywords.every(kw => typeof kw === 'string');
-          if (allStrings) {
-            return analysis.keywords as string[];
-          }
-          // Otherwise treat as weighted keywords
-          return analysis.keywords.map(kw => {
-            if (typeof kw === 'string') {
-              return { term: kw, weight: 1 };
-            } else if (kw && typeof kw === 'object' && 'term' in kw) {
-              return {
-                term: String(kw.term),
-                weight: typeof kw.weight === 'number' ? validateWeight(kw.weight) : 1
-              };
-            }
-            return { term: '', weight: 0 };
-          }).filter(kw => kw.term !== '') as Array<{term: string; weight: number}>;
+          // Use unified keyword normalization
+          const normalized = normalizeKeywords(analysis.keywords);
+          // Always return normalized format for ChunkAnalysis
+          return normalized.map(kw => ({
+            term: kw.term,
+            weight: kw.weight,
+            context: kw.context
+          }));
         })()
       : [],
     patterns: analysis.patterns && typeof analysis.patterns === 'object' 
@@ -205,7 +187,7 @@ export function isMetadataKey(key: string): key is keyof DocumentTemplate['metad
   const validKeys: (keyof DocumentTemplate['metadata'])[] = [
     'genre', 'style', 'purpose', 'audience', 'tone'
   ];
-  return validKeys.includes(key as any);
+  return validKeys.includes(key as keyof DocumentTemplate['metadata']);
 }
 
 /**

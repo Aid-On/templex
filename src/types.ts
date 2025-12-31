@@ -100,7 +100,8 @@ export interface ExtractionResult {
 
 export interface ChunkAnalysis {
   elements: TemplateElement[];
-  keywords: string[] | Array<{term: string; weight: number}>;
+  keywords: Array<{term: string; weight: number; context?: string}>; // Normalized type only
   patterns: Record<string, string>;
   confidence: number;
+  abstractTemplate?: AbstractTemplate; // Optional abstract template from analysis
 }

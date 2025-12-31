@@ -90,12 +90,9 @@ describe('ArticleGenerator', () => {
       expect(result).toBeDefined();
       expect(result).toContain('Generated Article');
       expect(mockProvider.chat).toHaveBeenCalledWith(
+        expect.any(String), // system prompt
+        expect.any(String), // user prompt
         expect.objectContaining({
-          messages: expect.arrayContaining([
-            expect.objectContaining({ role: 'system' }),
-            expect.objectContaining({ role: 'user' })
-          ]),
-          model: 'gpt-4',
           temperature: 0.7,
           maxTokens: 3000
         })
@@ -113,16 +110,11 @@ describe('ArticleGenerator', () => {
       await generator.generate(testTemplate, testData, options);
       
       expect(mockProvider.chat).toHaveBeenCalledWith(
+        'You are a technical writer', // custom system prompt  
+        expect.any(String), // user prompt
         expect.objectContaining({
-          model: 'gpt-3.5-turbo',
           temperature: 0.9,
-          maxTokens: 4000,
-          messages: expect.arrayContaining([
-            expect.objectContaining({
-              role: 'system',
-              content: 'You are a technical writer'
-            })
-          ])
+          maxTokens: 4000
         })
       );
     });
