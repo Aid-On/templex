@@ -100,7 +100,7 @@ export interface ExtractionResult {
 
 export interface ChunkAnalysis {
   elements: TemplateElement[];
-  keywords: string[];
+  keywords: string[] | Array<{term: string; weight: number}>;
   patterns: Record<string, string>;
   confidence: number;
 }
