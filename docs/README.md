@@ -2,7 +2,7 @@
 
 ## 概要
 
-`@aid-on/templex`は、記事や文書から抽象的なテンプレートと文書構造を抽出するライブラリです。fractop、iteratop、unilmpを組み合わせて、文書の構造パターンを学習し、再利用可能なテンプレートを生成します。
+`@aid-on/templex`は、記事や文書から抽象的なテンプレートと文書構造を抽出するライブラリです。fractop、iteratop、unillmを組み合わせて、文書の構造パターンを学習し、再利用可能なテンプレートを生成します。
 
 ## 主な特徴
 
@@ -10,7 +10,7 @@
 - **構造分析**: 見出し、段落、リストなどの文書構造を解析
 - **パターン学習**: 複数文書からの共通構造パターン発見
 - **関数型処理**: fractop/iteratopによる効率的なデータ変換
-- **LLM統合**: unilmpによる高度な文書理解
+- **LLM統合**: unillmによる高度な文書理解
 - **多言語対応**: 日本語・英語を含む多言語文書の処理
 
 ## アーキテクチャ
@@ -31,7 +31,7 @@ Raw Text → Structure Analysis → Pattern Recognition → Template Generation
 ├─────────────────┤    ├─────────────────┤    ├─────────────────┤
 │ Articles        │───►│ iteratop        │───►│ Templates       │
 │ Documents       │    │ fractop         │    │ Structures      │
-│ Web Pages       │    │ unilmp          │    │ Patterns        │
+│ Web Pages       │    │ unillm          │    │ Patterns        │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
