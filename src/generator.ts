@@ -1,6 +1,6 @@
-import type { AbstractTemplate, LLMProvider } from './types';
+import type { AbstractTemplate, LLMProvider } from './types.js';
 import { generate } from '@aid-on/unillm';
-import { getPresetPattern } from './patterns';
+import { getPresetPattern } from './patterns.js';
 
 // Factory function to create LLMProvider from unillm
 export function createUnillmProvider(modelSpec: string, apiKeys?: any): LLMProvider {

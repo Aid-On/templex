@@ -4,8 +4,8 @@ import type {
   TemplateElement,
   ChunkAnalysis,
   ExtractionConfig
-} from './types';
-import { normalizeKeywords, toDocumentKeywords } from './keyword-utils';
+} from './types.js';
+import { normalizeKeywords, toDocumentKeywords } from './keyword-utils.js';
 
 /**
  * Validate weight is between 0 and 1
