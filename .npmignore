@@ -1,0 +1,89 @@
+# Source files (only dist/ should be published)
+src/
+tests/
+integration-tests/
+
+# Config files
+tsconfig.json
+vitest.config.ts
+.eslintrc*
+.prettierrc*
+*.config.js
+*.config.ts
+
+# Development files
+.gitignore
+.editorconfig
+.nvmrc
+.npmrc
+
+# Documentation source
+docs/
+examples/
+*.md
+!README.md
+!CHANGELOG.md
+!LICENSE
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+azure-pipelines.yml
+
+# Test files
+coverage/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+__tests__/
+__mocks__/
+
+# Build artifacts that shouldn't be published
+*.tsbuildinfo
+*.map
+*.d.ts.map
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.cache/
+
+# Package manager files
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+.pnp.*
+.yarn/
+
+# Environment files
+.env*
+
+# Build tools
+.turbo/
+.parcel-cache/
+.rollup.cache/
+
+# Keep only essential files for npm package
+# dist/ - compiled JavaScript
+# package.json - package metadata
+# README.md - documentation
+# CHANGELOG.md - version history
+# LICENSE - license information
