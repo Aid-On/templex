@@ -6,7 +6,7 @@ import type { LLMProvider, ExtractionConfig, ArticleData } from '../../src/types
 
 describe('Unillm Integration Tests', () => {
   const groqApiKey = process.env.GROQ_API_KEY;
-  const geminiApiKey = process.env.GEMINI_API_KEY || '';
+  const geminiApiKey = process.env.GEMINI_API_KEY;
   const hasApiKey = !!groqApiKey || !!geminiApiKey;
 
   // Create a unillm-based provider for TemplateExtractor
