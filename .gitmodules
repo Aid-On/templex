@@ -1,0 +1,3 @@
+[submodule "packages/templex"]
+	path = packages/templex
+	url = git@github.com:Aid-On/templex.git
