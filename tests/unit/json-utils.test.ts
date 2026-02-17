@@ -96,7 +96,7 @@ describe('json-utils', () => {
 
   describe('parseJSONSafe', () => {
     it('should parse and validate JSON', () => {
-      const validator = (obj: any): obj is { key: string } => {
+      const validator = (obj: unknown): obj is { key: string } => {
         return typeof obj === 'object' && typeof obj.key === 'string';
       };
       
@@ -105,7 +105,7 @@ describe('json-utils', () => {
     });
 
     it('should return null for invalid structure', () => {
-      const validator = (obj: any): obj is { key: string } => {
+      const validator = (obj: unknown): obj is { key: string } => {
         return typeof obj === 'object' && typeof obj.key === 'string';
       };
       

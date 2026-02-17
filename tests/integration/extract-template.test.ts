@@ -5,7 +5,7 @@ import type { LLMProvider } from '../../src/types';
 
 // Mock LLM Provider for testing
 class MockLLMProvider implements LLMProvider {
-  async chat(systemPrompt: string, userPrompt: string, options?: any): Promise<string> {
+  async chat(systemPrompt: string, userPrompt: string, _options?: { temperature?: number; maxTokens?: number }): Promise<string> {
     // Simulate template extraction response
     if (systemPrompt.includes('template structure') || systemPrompt.includes('Extract the document template') || systemPrompt.includes('Extract template structure')) {
       return JSON.stringify({

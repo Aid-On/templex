@@ -12,7 +12,7 @@ describe('Unillm Integration Tests', () => {
   // Create a unillm-based provider for TemplateExtractor
   function createUnillmProvider(modelSpec: string = 'gemini:gemini-2.0-flash'): LLMProvider {
     return {
-      chat: async (systemPrompt: string, userPrompt: string, options?: any) => {
+      chat: async (systemPrompt: string, userPrompt: string, _options?: { temperature?: number; maxTokens?: number }) => {
         const messages = [
           { role: 'system' as const, content: systemPrompt },
           { role: 'user' as const, content: userPrompt }

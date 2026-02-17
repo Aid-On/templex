@@ -5,81 +5,49 @@
 import type {
   TemplateElement,
   AbstractTemplate,
-  DocumentTemplate,
-  ChunkAnalysis
 } from './types.js';
+
+const VALID_ELEMENT_TYPES = new Set(['heading', 'paragraph', 'list', 'quote', 'code', 'section']);
+
+/**
+ * Check if a heading level is valid
+ */
+function isValidHeadingLevel(obj: Record<string, unknown>): boolean {
+  if (obj.type !== 'heading' || obj.level === undefined) return true;
+  return typeof obj.level === 'number' && obj.level >= 1 && obj.level <= 6;
+}
 
 /**
  * Check if value is a TemplateElement
  */
 export function isTemplateElement(value: unknown): value is TemplateElement {
-  if (!value || typeof value !== 'object') {
-    return false;
-  }
-  
-  // Use Object.prototype methods to safely access properties
-  const obj = Object(value);
-  
-  // Must have type property
-  if (typeof obj.type !== 'string') {
-    return false;
-  }
-  
-  // Valid types
-  const validTypes = ['heading', 'paragraph', 'list', 'quote', 'code', 'section'];
-  if (!validTypes.includes(obj.type)) {
-    return false;
-  }
-  
-  // Optional level for headings
-  if (obj.type === 'heading' && obj.level !== undefined) {
-    if (typeof obj.level !== 'number' || obj.level < 1 || obj.level > 6) {
-      return false;
-    }
-  }
-  
-  return true;
+  if (!value || typeof value !== 'object') return false;
+
+  const obj = Object(value) as Record<string, unknown>;
+  if (typeof obj.type !== 'string') return false;
+  if (!VALID_ELEMENT_TYPES.has(obj.type)) return false;
+
+  return isValidHeadingLevel(obj);
 }
 
 /**
  * Check if value is an array of TemplateElements
  */
 export function isTemplateElementArray(value: unknown): value is TemplateElement[] {
-  if (!Array.isArray(value)) {
-    return false;
-  }
-  
+  if (!Array.isArray(value)) return false;
   return value.every(isTemplateElement);
 }
 
+const VALID_FLOWS = new Set(['Linear', 'Pyramid', 'Circular']);
+
 /**
- * Check if value is an AbstractTemplate
+ * Validate that a component has the required properties
  */
-export function isAbstractTemplate(value: unknown): value is AbstractTemplate {
-  if (!value || typeof value !== 'object') {
-    return false;
-  }
-  
-  const obj = Object(value);
-  
-  // Required properties
+function hasRequiredComponentProps(obj: Record<string, unknown>): boolean {
   if (typeof obj.name !== 'string') return false;
-  if (typeof obj.formula !== 'string') return false;
-  if (!Array.isArray(obj.components)) return false;
-  if (typeof obj.flow !== 'string') return false;
-  if (!Array.isArray(obj.persuasionTechniques)) return false;
-  
-  // Validate flow value
-  const validFlows = ['Linear', 'Pyramid', 'Circular'];
-  if (!validFlows.includes(obj.flow)) return false;
-  
-  // Validate components
-  for (const component of obj.components) {
-    if (!isAbstractComponent(component)) {
-      return false;
-    }
-  }
-  
+  if (typeof obj.purpose !== 'string') return false;
+  if (typeof obj.position !== 'number') return false;
+  if (typeof obj.weight !== 'number') return false;
   return true;
 }
 
@@ -87,83 +55,48 @@ export function isAbstractTemplate(value: unknown): value is AbstractTemplate {
  * Check if value is an AbstractTemplate component
  */
 function isAbstractComponent(value: unknown): boolean {
-  if (!value || typeof value !== 'object') {
-    return false;
-  }
-  
-  const obj = Object(value);
-  
-  // Required properties
-  if (typeof obj.name !== 'string') return false;
-  if (typeof obj.purpose !== 'string') return false;
-  if (typeof obj.position !== 'number') return false;
-  if (typeof obj.weight !== 'number') return false;
-  
-  // Weight must be between 0 and 1
-  if (obj.weight < 0 || obj.weight > 1) return false;
-  
-  // Optional arrays
+  if (!value || typeof value !== 'object') return false;
+
+  const obj = Object(value) as Record<string, unknown>;
+  if (!hasRequiredComponentProps(obj)) return false;
+
+  const weight = obj.weight as number;
+  if (weight < 0 || weight > 1) return false;
+
   if (obj.examples && !Array.isArray(obj.examples)) return false;
   if (obj.patterns && !Array.isArray(obj.patterns)) return false;
-  
+
   return true;
+}
+
+/**
+ * Check if value is an AbstractTemplate
+ */
+export function isAbstractTemplate(value: unknown): value is AbstractTemplate {
+  if (!value || typeof value !== 'object') return false;
+
+  const obj = Object(value) as Record<string, unknown>;
+  if (typeof obj.name !== 'string') return false;
+  if (typeof obj.formula !== 'string') return false;
+  if (!Array.isArray(obj.components)) return false;
+  if (typeof obj.flow !== 'string') return false;
+  if (!Array.isArray(obj.persuasionTechniques)) return false;
+  if (!VALID_FLOWS.has(obj.flow)) return false;
+
+  return obj.components.every(isAbstractComponent);
 }
 
 /**
  * Check if value is a string record
  */
 export function isStringRecord(value: unknown): value is Record<string, string> {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return false;
-  }
-  
-  const obj = Object(value);
-  
-  for (const key in obj) {
-    if (typeof obj[key] !== 'string') {
-      return false;
-    }
-  }
-  
-  return true;
-}
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
 
-/**
- * Safely parse elements from unknown value
- */
-export function parseTemplateElements(value: unknown): TemplateElement[] {
-  if (!value) return [];
-  
-  if (isTemplateElementArray(value)) {
-    return value;
+  const obj = Object(value) as Record<string, unknown>;
+  for (const key in obj) {
+    if (typeof obj[key] !== 'string') return false;
   }
-  
-  if (Array.isArray(value)) {
-    // Try to convert each element
-    const converted: TemplateElement[] = [];
-    for (const item of value) {
-      if (isTemplateElement(item)) {
-        converted.push(item);
-      } else if (typeof item === 'string') {
-        // Try to parse string as element type
-        const typeMatch = item.match(/^(\S+)/);
-        if (typeMatch) {
-          const type = normalizeElementType(typeMatch[1]);
-          if (type) {
-            const element: TemplateElement = { type };
-            const levelMatch = item.match(/#+(\s)/);
-            if (levelMatch && type === 'heading') {
-              element.level = levelMatch[0].length - 1;
-            }
-            converted.push(element);
-          }
-        }
-      }
-    }
-    return converted;
-  }
-  
-  return [];
+  return true;
 }
 
 /**
@@ -177,12 +110,12 @@ const ELEMENT_TYPE_MAP: Record<string, TemplateElement['type']> = {
   'code': 'code',
   'section': 'section',
   // Japanese mappings
-  '見出し': 'heading',
-  '段落': 'paragraph',
-  'リスト': 'list',
-  '引用': 'quote',
-  'コード': 'code',
-  'セクション': 'section'
+  '\u898B\u51FA\u3057': 'heading',
+  '\u6BB5\u843D': 'paragraph',
+  '\u30EA\u30B9\u30C8': 'list',
+  '\u5F15\u7528': 'quote',
+  '\u30B3\u30FC\u30C9': 'code',
+  '\u30BB\u30AF\u30B7\u30E7\u30F3': 'section'
 };
 
 /**
@@ -194,35 +127,83 @@ function normalizeElementType(input: string): TemplateElement['type'] | null {
 }
 
 /**
+ * Try to convert a string into a TemplateElement
+ */
+function tryConvertStringToElement(item: string): TemplateElement | null {
+  const typeMatch = item.match(/^(\S+)/);
+  if (!typeMatch) return null;
+
+  const type = normalizeElementType(typeMatch[1]);
+  if (!type) return null;
+
+  const element: TemplateElement = { type };
+  const levelMatch = item.match(/#+(\s)/);
+  if (levelMatch && type === 'heading') {
+    element.level = levelMatch[0].length - 1;
+  }
+  return element;
+}
+
+/**
+ * Safely parse elements from unknown value
+ */
+export function parseTemplateElements(value: unknown): TemplateElement[] {
+  if (!value) return [];
+  if (isTemplateElementArray(value)) return value;
+  if (!Array.isArray(value)) return [];
+
+  const converted: TemplateElement[] = [];
+  for (const item of value) {
+    if (isTemplateElement(item)) {
+      converted.push(item);
+      continue;
+    }
+    if (typeof item === 'string') {
+      const element = tryConvertStringToElement(item);
+      if (element) converted.push(element);
+    }
+  }
+  return converted;
+}
+
+/**
  * Safely parse patterns from unknown value
  */
 export function parsePatterns(value: unknown): Record<string, string> {
   if (!value) return {};
-  
-  if (isStringRecord(value)) {
-    return value;
-  }
-  
-  if (typeof value === 'object' && value !== null) {
-    const result: Record<string, string> = {};
-    const obj = Object(value);
-    
-    for (const key in obj) {
-      const val = obj[key];
-      if (typeof val === 'string') {
-        result[key] = val;
-      } else if (Array.isArray(val)) {
-        // Convert array to string
-        result[key] = val.join(', ');
-      } else if (val !== null && val !== undefined) {
-        result[key] = String(val);
-      }
+  if (isStringRecord(value)) return value;
+  if (typeof value !== 'object' || value === null) return {};
+
+  const result: Record<string, string> = {};
+  const obj = Object(value) as Record<string, unknown>;
+
+  for (const key in obj) {
+    const converted = convertToString(obj[key]);
+    if (converted !== null) {
+      result[key] = converted;
     }
-    
-    return result;
   }
-  
-  return {};
+
+  return result;
+}
+
+/**
+ * Convert an unknown value to a string representation, or null if not convertible
+ */
+function convertToString(val: unknown): string | null {
+  if (typeof val === 'string') return val;
+  if (Array.isArray(val)) return val.join(', ');
+  if (val !== null && val !== undefined) return String(val);
+  return null;
+}
+
+/**
+ * Normalize a flow string to one of the valid flow types
+ */
+function normalizeFlow(flow: unknown): 'Linear' | 'Pyramid' | 'Circular' {
+  if (flow === 'Pyramid') return 'Pyramid';
+  if (flow === 'Circular') return 'Circular';
+  return 'Linear';
 }
 
 /**
@@ -230,34 +211,22 @@ export function parsePatterns(value: unknown): Record<string, string> {
  */
 export function parseAbstractTemplate(value: unknown): AbstractTemplate | undefined {
   if (!value) return undefined;
-  
-  if (isAbstractTemplate(value)) {
-    return value;
+  if (isAbstractTemplate(value)) return value;
+  if (typeof value !== 'object' || value === null) return undefined;
+
+  const obj = Object(value) as Record<string, unknown>;
+
+  if (typeof obj.name !== 'string' || typeof obj.formula !== 'string') {
+    return undefined;
   }
-  
-  // Try to construct from partial data
-  if (typeof value === 'object' && value !== null) {
-    const obj = Object(value);
-    
-    // Must have at least name and formula
-    if (typeof obj.name === 'string' && typeof obj.formula === 'string') {
-      const flow = typeof obj.flow === 'string' ? obj.flow : 'Linear';
-      const validFlow: 'Linear' | 'Pyramid' | 'Circular' = 
-        flow === 'Pyramid' ? 'Pyramid' :
-        flow === 'Circular' ? 'Circular' :
-        'Linear';
-      
-      return {
-        name: obj.name,
-        formula: obj.formula,
-        components: Array.isArray(obj.components) ? obj.components.filter(isAbstractComponent) : [],
-        flow: validFlow,
-        persuasionTechniques: Array.isArray(obj.persuasionTechniques) 
-          ? obj.persuasionTechniques.filter((t: unknown): t is string => typeof t === 'string')
-          : []
-      };
-    }
-  }
-  
-  return undefined;
+
+  return {
+    name: obj.name,
+    formula: obj.formula,
+    components: Array.isArray(obj.components) ? obj.components.filter(isAbstractComponent) : [],
+    flow: normalizeFlow(obj.flow),
+    persuasionTechniques: Array.isArray(obj.persuasionTechniques)
+      ? obj.persuasionTechniques.filter((t: unknown): t is string => typeof t === 'string')
+      : []
+  };
 }

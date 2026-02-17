@@ -1,6 +1,6 @@
 {
   "name": "@aid-on/templex",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Templex - Template Extractor for extracting abstract templates and document structures from articles and text",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -55,9 +55,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@aid-on/fractop": "^0.6.2",
-    "@aid-on/iteratop": "^0.3.1",
-    "@aid-on/unillm": "^0.5.1"
+    "@aid-on/fractop": "^0.6.3",
+    "@aid-on/iteratop": "^0.3.2",
+    "@aid-on/unillm": "^0.5.2"
   },
   "devDependencies": {
     "tsup": "^8.5.1",

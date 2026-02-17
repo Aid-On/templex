@@ -3,15 +3,14 @@ import { generate } from '@aid-on/unillm';
 import { getPresetPattern } from './patterns.js';
 
 // Factory function to create LLMProvider from unillm
-export function createUnillmProvider(modelSpec: string, apiKeys?: any): LLMProvider {
+export function createUnillmProvider(modelSpec: string, apiKeys?: Record<string, string>): LLMProvider {
   return {
-    chat: async (systemPrompt: string, userPrompt: string, options?: any) => {
+    chat: async (systemPrompt: string, userPrompt: string, options?: { temperature?: number; maxTokens?: number }) => {
       const messages = [
         { role: 'system' as const, content: systemPrompt },
         { role: 'user' as const, content: userPrompt }
       ];
-      const result = await generate(modelSpec, messages, {
-        ...apiKeys,
+      const result = await generate(modelSpec, messages, apiKeys || {}, {
         temperature: options?.temperature,
         maxTokens: options?.maxTokens
       });
@@ -45,7 +44,10 @@ export interface GeneratorOptions {
 export class ArticleGenerator {
   private provider: LLMProvider;
   private defaultOptions: GeneratorOptions;
-  private prompts: Record<string, any>;
+  private prompts: Record<string, {
+    systemPrompt: string;
+    buildPrompt: (template: AbstractTemplate, data: ArticleData) => string;
+  }>;
 
   constructor(provider: LLMProvider, defaultOptions?: GeneratorOptions) {
     this.provider = provider;

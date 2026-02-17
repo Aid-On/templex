@@ -5,7 +5,7 @@ import type { LLMProvider } from '../../src/types';
 
 // Enhanced mock provider with pattern awareness
 class PatternAwareMockProvider implements LLMProvider {
-  async chat(systemPrompt: string, userPrompt: string, options?: any): Promise<string> {
+  async chat(systemPrompt: string, userPrompt: string, _options?: { temperature?: number; maxTokens?: number }): Promise<string> {
     // Parse the prompt to understand what pattern is being used
     // Check for Problem-Solution pattern first (more specific)
     const isProblemSolution = userPrompt.includes('問題提起') || 
@@ -284,7 +284,7 @@ describe('Pattern-based Generation Integration', () => {
   
   describe('Custom options with patterns', () => {
     it('should apply custom temperature and maxTokens', async () => {
-      let capturedOptions: any;
+      let capturedOptions: { temperature?: number; maxTokens?: number } | undefined;
       
       const capturingProvider: LLMProvider = {
         chat: async (sys, user, options) => {

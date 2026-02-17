@@ -6,13 +6,13 @@
 /**
  * Extract JSON from text with multiple fallback strategies
  */
-export function extractJSON<T = any>(text: string): T | null {
+export function extractJSON<T = unknown>(text: string): T | null {
   if (!text) return null;
   
   // Strategy 1: Direct parse if already valid JSON
   try {
     return JSON.parse(text);
-  } catch {
+  } catch { /* direct parse failed, try next strategy */
     // Continue to fallback strategies
   }
   
@@ -21,7 +21,7 @@ export function extractJSON<T = any>(text: string): T | null {
   if (markdownMatch) {
     try {
       return JSON.parse(markdownMatch[1]);
-    } catch {
+    } catch { /* code block extraction failed, try next */
       // Continue to next strategy
     }
   }
@@ -31,7 +31,7 @@ export function extractJSON<T = any>(text: string): T | null {
   if (jsonStructure) {
     try {
       return JSON.parse(jsonStructure);
-    } catch {
+    } catch { /* brace extraction failed, try next */
       // Continue to next strategy
     }
   }
@@ -40,65 +40,72 @@ export function extractJSON<T = any>(text: string): T | null {
   const cleaned = cleanJSONString(text);
   try {
     return JSON.parse(cleaned);
-  } catch {
+  } catch { /* repair attempt failed */
     return null;
   }
+}
+
+/**
+ * Find the position and character of the first JSON structure start
+ */
+function findJSONStart(text: string): { position: number; char: string } | null {
+  const braceIdx = text.indexOf('{');
+  const bracketIdx = text.indexOf('[');
+
+  if (braceIdx === -1 && bracketIdx === -1) return null;
+  if (braceIdx === -1) return { position: bracketIdx, char: '[' };
+  if (bracketIdx === -1) return { position: braceIdx, char: '{' };
+
+  return braceIdx < bracketIdx
+    ? { position: braceIdx, char: '{' }
+    : { position: bracketIdx, char: '[' };
+}
+
+/**
+ * Process a single character during balanced JSON extraction
+ */
+function processChar(
+  char: string,
+  state: { depth: number; inString: boolean; escaped: boolean },
+  startChar: string,
+  endChar: string
+): boolean {
+  if (state.escaped) {
+    state.escaped = false;
+    return false;
+  }
+
+  if (char === '\\') { state.escaped = true; return false; }
+  if (char === '"') { state.inString = !state.inString; return false; }
+
+  if (!state.inString) {
+    if (char === startChar) state.depth++;
+    if (char === endChar) {
+      state.depth--;
+      if (state.depth === 0) return true;
+    }
+  }
+
+  return false;
 }
 
 /**
  * Extract balanced JSON structure from text
  */
 function extractBalancedJSON(text: string): string | null {
-  const starts = ['{', '['];
-  let firstStart = -1;
-  let startChar = '';
-  
-  // Find first JSON start
-  for (const char of starts) {
-    const idx = text.indexOf(char);
-    if (idx !== -1 && (firstStart === -1 || idx < firstStart)) {
-      firstStart = idx;
-      startChar = char;
+  const start = findJSONStart(text);
+  if (!start) return null;
+
+  const endChar = start.char === '{' ? '}' : ']';
+  const state = { depth: 0, inString: false, escaped: false };
+
+  for (let i = start.position; i < text.length; i++) {
+    const complete = processChar(text[i], state, start.char, endChar);
+    if (complete) {
+      return text.substring(start.position, i + 1);
     }
   }
-  
-  if (firstStart === -1) return null;
-  
-  const endChar = startChar === '{' ? '}' : ']';
-  let depth = 0;
-  let inString = false;
-  let escaped = false;
-  
-  for (let i = firstStart; i < text.length; i++) {
-    const char = text[i];
-    
-    if (escaped) {
-      escaped = false;
-      continue;
-    }
-    
-    if (char === '\\') {
-      escaped = true;
-      continue;
-    }
-    
-    if (char === '"') {
-      inString = !inString;
-      continue;
-    }
-    
-    if (!inString) {
-      if (char === startChar) {
-        depth++;
-      } else if (char === endChar) {
-        depth--;
-        if (depth === 0) {
-          return text.substring(firstStart, i + 1);
-        }
-      }
-    }
-  }
-  
+
   return null;
 }
 
@@ -127,7 +134,7 @@ function cleanJSONString(text: string): string {
  */
 export function parseJSONSafe<T>(
   text: string,
-  validator?: (obj: any) => obj is T
+  validator?: (obj: unknown) => obj is T
 ): T | null {
   const parsed = extractJSON(text);
   
@@ -145,7 +152,7 @@ export function parseJSONSafe<T>(
 /**
  * Format object as JSON for LLM consumption
  */
-export function formatForLLM(obj: any, pretty: boolean = true): string {
+export function formatForLLM(obj: unknown, pretty: boolean = true): string {
   if (pretty) {
     return JSON.stringify(obj, null, 2);
   }
@@ -157,29 +164,31 @@ export function formatForLLM(obj: any, pretty: boolean = true): string {
  */
 export function createValidator<T>(
   requiredKeys: string[],
-  typeChecks?: Record<string, (val: any) => boolean>
-): (obj: any) => obj is T {
-  return (obj: any): obj is T => {
+  typeChecks?: Record<string, (val: unknown) => boolean>
+): (obj: unknown) => obj is T {
+  return (obj: unknown): obj is T => {
     if (!obj || typeof obj !== 'object') {
       return false;
     }
-    
+
+    const record = obj as Record<string, unknown>;
+
     // Check required keys
     for (const key of requiredKeys) {
-      if (!(key in obj)) {
+      if (!(key in record)) {
         return false;
       }
     }
-    
+
     // Check types if provided
     if (typeChecks) {
       for (const [key, check] of Object.entries(typeChecks)) {
-        if (key in obj && !check(obj[key])) {
+        if (key in record && !check(record[key])) {
           return false;
         }
       }
     }
-    
+
     return true;
   };
 }

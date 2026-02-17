@@ -17,7 +17,7 @@ export interface NormalizedKeyword {
 /**
  * Normalize any keyword format to the unified internal representation
  */
-export function normalizeKeyword(keyword: any): NormalizedKeyword | null {
+export function normalizeKeyword(keyword: unknown): NormalizedKeyword | null {
   if (!keyword) return null;
   
   // String format
@@ -31,14 +31,15 @@ export function normalizeKeyword(keyword: any): NormalizedKeyword | null {
   
   // Object format variations
   if (typeof keyword === 'object') {
-    const term = keyword.term || keyword.keyword || keyword.text || '';
-    const weight = normalizeWeight(keyword.weight ?? keyword.score ?? 1.0);
-    const context = keyword.context || 'general';
-    
+    const kw = keyword as Record<string, unknown>;
+    const term = kw.term || kw.keyword || kw.text || '';
+    const weight = normalizeWeight(kw.weight ?? kw.score ?? 1.0);
+    const context = typeof kw.context === 'string' ? kw.context : 'general';
+
     if (!term || typeof term !== 'string') {
       return null;
     }
-    
+
     return {
       term: term.trim(),
       weight,
@@ -52,7 +53,7 @@ export function normalizeKeyword(keyword: any): NormalizedKeyword | null {
 /**
  * Normalize an array of mixed keyword formats
  */
-export function normalizeKeywords(keywords: any[]): NormalizedKeyword[] {
+export function normalizeKeywords(keywords: unknown[]): NormalizedKeyword[] {
   if (!Array.isArray(keywords)) {
     return [];
   }
@@ -86,7 +87,7 @@ export function toStringArray(keywords: NormalizedKeyword[]): string[] {
  * Merge multiple keyword lists with weight accumulation
  */
 export function mergeKeywordLists(
-  ...keywordLists: any[][]
+  ...keywordLists: unknown[][]
 ): NormalizedKeyword[] {
   const keywordMap = new Map<string, NormalizedKeyword>();
   
@@ -117,8 +118,8 @@ export function mergeKeywordLists(
  * Calculate similarity between two keyword lists
  */
 export function keywordListSimilarity(
-  list1: any[],
-  list2: any[]
+  list1: unknown[],
+  list2: unknown[]
 ): number {
   const norm1 = normalizeKeywords(list1);
   const norm2 = normalizeKeywords(list2);
@@ -169,7 +170,7 @@ export function groupByContext(
 /**
  * Normalize weight to 0-1 range
  */
-function normalizeWeight(weight: any): number {
+function normalizeWeight(weight: unknown): number {
   const num = Number(weight);
   if (isNaN(num)) return 1.0;
   if (num < 0) return 0;
