@@ -13,7 +13,7 @@ import type { LLMProvider } from '../../src/types';
 
 // シンプルなモックプロバイダー
 class SimpleMockProvider implements LLMProvider {
-  async chat(systemPrompt: string, userPrompt: string): Promise<string> {
+  async chat(_systemPrompt: string, _userPrompt: string): Promise<string> {
     // 実際のLLMの代わりに、簡単な解析を行う
     const analysis = {
       elements: [

@@ -9,7 +9,6 @@ import type {
   AbstractTemplate,
   ExtractionOptions,
   LLMProvider,
-  TemplateElement,
   DocumentTemplate,
 } from './types.js';
 import { PromptBuilder } from './prompts.js';
@@ -56,13 +55,7 @@ export async function analyzeChunks(
         });
       }
 
-      let response: string;
-      try {
-        response = await ctx.config.provider.chat(prompt, chunk);
-      } catch (error) {
-        // Re-throw provider errors to prevent silent failures
-        throw error;
-      }
+      const response = await ctx.config.provider.chat(prompt, chunk);
 
       processedChunks++;
 

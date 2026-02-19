@@ -15,39 +15,39 @@ export interface NormalizedKeyword {
 }
 
 /**
+ * Extract term string from a keyword object, checking common field names
+ */
+function extractTerm(kw: Record<string, unknown>): string | null {
+  const termFields = ['term', 'keyword', 'text'] as const;
+  for (const field of termFields) {
+    if (typeof kw[field] === 'string' && kw[field]) {
+      return (kw[field] as string).trim();
+    }
+  }
+  return null;
+}
+
+/**
  * Normalize any keyword format to the unified internal representation
  */
 export function normalizeKeyword(keyword: unknown): NormalizedKeyword | null {
   if (!keyword) return null;
-  
-  // String format
+
   if (typeof keyword === 'string') {
-    return {
-      term: keyword.trim(),
-      weight: 1.0,
-      context: 'general'
-    };
+    return { term: keyword.trim(), weight: 1.0, context: 'general' };
   }
-  
-  // Object format variations
-  if (typeof keyword === 'object') {
-    const kw = keyword as Record<string, unknown>;
-    const term = kw.term || kw.keyword || kw.text || '';
-    const weight = normalizeWeight(kw.weight ?? kw.score ?? 1.0);
-    const context = typeof kw.context === 'string' ? kw.context : 'general';
 
-    if (!term || typeof term !== 'string') {
-      return null;
-    }
+  if (typeof keyword !== 'object') return null;
 
-    return {
-      term: term.trim(),
-      weight,
-      context
-    };
-  }
-  
-  return null;
+  const kw = keyword as Record<string, unknown>;
+  const term = extractTerm(kw);
+  if (!term) return null;
+
+  return {
+    term,
+    weight: normalizeWeight(kw.weight ?? kw.score ?? 1.0),
+    context: typeof kw.context === 'string' ? kw.context : 'general'
+  };
 }
 
 /**

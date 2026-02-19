@@ -3,7 +3,7 @@
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 import { TemplateExtractor, ArticleGenerator } from '../src';
-import type { LLMProvider } from '../src/types';
+
 
 async function main() {
   const args = process.argv.slice(2);

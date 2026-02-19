@@ -13,7 +13,6 @@ import type {
 } from './types.js';
 import {
   mergeAnalysisKeywords,
-  mergeAnalysisPatterns,
   calculateConfidence,
 } from './core-analysis.js';
 

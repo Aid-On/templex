@@ -19,20 +19,17 @@ describe('type-guards', () => {
       expect(isTemplateElement({ type: 'code' })).toBe(true);
       expect(isTemplateElement({ type: 'section' })).toBe(true);
     });
-
     it('should reject invalid types', () => {
       expect(isTemplateElement({ type: 'invalid' })).toBe(false);
       expect(isTemplateElement({ type: 123 })).toBe(false);
       expect(isTemplateElement({ notType: 'heading' })).toBe(false);
     });
-
     it('should validate heading levels', () => {
       expect(isTemplateElement({ type: 'heading', level: 1 })).toBe(true);
       expect(isTemplateElement({ type: 'heading', level: 6 })).toBe(true);
       expect(isTemplateElement({ type: 'heading', level: 0 })).toBe(false);
       expect(isTemplateElement({ type: 'heading', level: 7 })).toBe(false);
     });
-
     it('should reject non-objects', () => {
       expect(isTemplateElement(null)).toBe(false);
       expect(isTemplateElement(undefined)).toBe(false);
@@ -43,27 +40,15 @@ describe('type-guards', () => {
 
   describe('isTemplateElementArray', () => {
     it('should validate array of template elements', () => {
-      const elements = [
-        { type: 'heading', level: 1 },
-        { type: 'paragraph' },
-        { type: 'list' }
-      ];
+      const elements = [{ type: 'heading', level: 1 }, { type: 'paragraph' }, { type: 'list' }];
       expect(isTemplateElementArray(elements)).toBe(true);
     });
-
     it('should reject mixed arrays', () => {
-      const mixed = [
-        { type: 'heading' },
-        'not an element',
-        { type: 'paragraph' }
-      ];
-      expect(isTemplateElementArray(mixed)).toBe(false);
+      expect(isTemplateElementArray([{ type: 'heading' }, 'not an element', { type: 'paragraph' }])).toBe(false);
     });
-
     it('should accept empty arrays', () => {
       expect(isTemplateElementArray([])).toBe(true);
     });
-
     it('should reject non-arrays', () => {
       expect(isTemplateElementArray({ type: 'heading' })).toBe(false);
       expect(isTemplateElementArray(null)).toBe(false);

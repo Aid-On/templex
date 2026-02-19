@@ -7,7 +7,6 @@
 
 import { FractalProcessor } from '@aid-on/fractop';
 import type {
-  DocumentTemplate,
   AbstractTemplate,
   ExtractionConfig,
   ExtractionOptions,
@@ -73,20 +72,23 @@ export class TemplateExtractor {
     );
 
     try {
-      return await this.performExtraction(text, options, fractalProcessor, startTime, onProgress);
+      return await this.performExtraction({
+        text, options, fractalProcessor, startTime, onProgress,
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(`Template extraction failed: ${message}`, { cause: error });
     }
   }
 
-  private async performExtraction(
-    text: string,
-    options: ExtractionOptions,
-    fractalProcessor: FractalProcessor<ChunkAnalysis>,
-    startTime: number,
-    onProgress?: ProgressCallback
-  ): Promise<ExtractionResult> {
+  private async performExtraction(params: {
+    text: string;
+    options: ExtractionOptions;
+    fractalProcessor: FractalProcessor<ChunkAnalysis>;
+    startTime: number;
+    onProgress?: ProgressCallback;
+  }): Promise<ExtractionResult> {
+    const { text, options, fractalProcessor, startTime, onProgress } = params;
     reportProgress(onProgress, { phase: 'chunking', current: 0, total: 1, message: 'Preparing text chunks for analysis' });
 
     const analysisCtx: AnalysisContext = {

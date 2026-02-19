@@ -9,13 +9,13 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { TemplateExtractor } from '../../src';
-import type { LLMProvider, DocumentTemplate, ExtractionResult } from '../../src/types';
+import type { LLMProvider, ExtractionResult } from '../../src/types';
 
 // バッチ処理用のプロバイダー
 class BatchMockProvider implements LLMProvider {
   private callCount = 0;
   
-  async chat(systemPrompt: string, userPrompt: string): Promise<string> {
+  async chat(_systemPrompt: string, userPrompt: string): Promise<string> {
     this.callCount++;
     
     // 文書の特徴に応じて異なるテンプレートを返す
@@ -239,58 +239,30 @@ Reactの最新バージョンがリリースされました。
   console.log('\n' + '='.repeat(70));
   console.log('📊 バッチ処理結果サマリー');
   console.log('='.repeat(70));
-  
   console.log(`\n✅ 成功: ${results.length}件`);
   console.log(`❌ エラー: ${errors.length}件`);
   console.log(`📞 API呼び出し回数: ${provider.getCallCount()}回`);
-  
+
   if (results.length > 0) {
-    // 共通パターンの分析
     const commonPatterns = analyzeCommonPatterns(results);
-    
     console.log('\n🔍 共通パターン分析:');
     console.log('-'.repeat(40));
-    
     console.log('\n📝 共通構造要素:');
-    commonPatterns.commonElements.forEach(element => {
-      console.log(`  • ${element}`);
-    });
-    
+    commonPatterns.commonElements.forEach(element => { console.log(`  • ${element}`); });
     console.log('\n🔤 共通キーワード:');
-    commonPatterns.commonKeywords.forEach(keyword => {
-      console.log(`  • ${keyword}`);
-    });
-    
+    commonPatterns.commonKeywords.forEach(keyword => { console.log(`  • ${keyword}`); });
     console.log(`\n📈 平均信頼度: ${(commonPatterns.averageConfidence * 100).toFixed(1)}%`);
-    
-    // 処理時間の統計
     const totalTime = results.reduce((sum, r) => sum + r.processingTime, 0);
     const avgTime = totalTime / results.length;
-    
-    console.log(`\n⏱️  処理時間:`);
-    console.log(`  • 合計: ${totalTime}ms`);
-    console.log(`  • 平均: ${avgTime.toFixed(0)}ms/文書`);
-    
-    // 結果をJSONファイルに保存
+    console.log(`\n⏱️  処理時間: 合計 ${totalTime}ms / 平均 ${avgTime.toFixed(0)}ms`);
     const outputPath = 'examples/templates/batch-results.json';
     const outputData = {
       timestamp: new Date().toISOString(),
-      summary: {
-        processed: results.length,
-        failed: errors.length,
-        averageConfidence: commonPatterns.averageConfidence,
-        totalProcessingTime: totalTime
-      },
+      summary: { processed: results.length, failed: errors.length, averageConfidence: commonPatterns.averageConfidence, totalProcessingTime: totalTime },
       commonPatterns,
-      results: results.map(r => ({
-        confidence: r.confidence,
-        processingTime: r.processingTime,
-        chunks: r.chunks,
-        keywords: r.template.keywords.slice(0, 5)
-      })),
+      results: results.map(r => ({ confidence: r.confidence, processingTime: r.processingTime, chunks: r.chunks, keywords: r.template.keywords.slice(0, 5) })),
       errors
     };
-    
     try {
       writeFileSync(outputPath, JSON.stringify(outputData, null, 2));
       console.log(`\n💾 結果を保存しました: ${outputPath}`);
@@ -298,10 +270,7 @@ Reactの最新バージョンがリリースされました。
       console.log(`\n⚠️  結果の保存に失敗: ${error}`);
     }
   }
-  
   console.log('\n✅ バッチ処理完了！');
-  
-  // 推奨事項
   console.log('\n💡 推奨事項:');
   console.log('  1. 共通パターンを基にテンプレートを標準化');
   console.log('  2. 信頼度の低い文書は個別に再分析');

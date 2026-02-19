@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-17T14:17:42.755Z",
+  "timestamp": "2026-02-19T21:21:34.184Z",
   "targetDir": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex",
   "files": [
     {
@@ -75,7 +75,7 @@
         }
       ],
       "score": {
-        "score": 93,
+        "score": 97,
         "grade": "A"
       }
     },
@@ -175,7 +175,7 @@
       "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/basic-extraction.ts",
       "complexity": {
         "cyclomatic": 4,
-        "cognitive": 3,
+        "cognitive": 4,
         "functions": [
           {
             "name": "chat",
@@ -199,7 +199,7 @@
             "name": "(anonymous)",
             "line": 97,
             "complexity": 3,
-            "cognitiveComplexity": 2
+            "cognitiveComplexity": 4
           },
           {
             "name": "(anonymous)",
@@ -410,8 +410,8 @@
         }
       ],
       "score": {
-        "score": 76,
-        "grade": "B"
+        "score": 95,
+        "grade": "A"
       }
     },
     {
@@ -448,7 +448,7 @@
             "name": "(anonymous)",
             "line": 102,
             "complexity": 3,
-            "cognitiveComplexity": 2
+            "cognitiveComplexity": 4
           },
           {
             "name": "(anonymous)",
@@ -512,25 +512,25 @@
           },
           {
             "name": "(anonymous)",
+            "line": 251,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 253,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
             "line": 255,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 260,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 267,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 285,
+            "line": 263,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
@@ -667,6 +667,14 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
+          "line": 242,
+          "column": 3,
+          "severity": "info",
+          "rule": "no-console",
+          "message": "Unexpected console.log statement"
+        },
+        {
+          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
           "line": 243,
           "column": 3,
           "severity": "info",
@@ -683,8 +691,24 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 245,
-          "column": 3,
+          "line": 248,
+          "column": 5,
+          "severity": "info",
+          "rule": "no-console",
+          "message": "Unexpected console.log statement"
+        },
+        {
+          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
+          "line": 249,
+          "column": 5,
+          "severity": "info",
+          "rule": "no-console",
+          "message": "Unexpected console.log statement"
+        },
+        {
+          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
+          "line": 250,
+          "column": 5,
           "severity": "info",
           "rule": "no-console",
           "message": "Unexpected console.log statement"
@@ -692,7 +716,7 @@
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
           "line": 251,
-          "column": 5,
+          "column": 56,
           "severity": "info",
           "rule": "no-console",
           "message": "Unexpected console.log statement"
@@ -707,6 +731,14 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
+          "line": 253,
+          "column": 56,
+          "severity": "info",
+          "rule": "no-console",
+          "message": "Unexpected console.log statement"
+        },
+        {
+          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
           "line": 254,
           "column": 5,
           "severity": "info",
@@ -715,15 +747,7 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 256,
-          "column": 7,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 259,
+          "line": 257,
           "column": 5,
           "severity": "info",
           "rule": "no-console",
@@ -731,16 +755,8 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 261,
+          "line": 268,
           "column": 7,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 264,
-          "column": 5,
           "severity": "info",
           "rule": "no-console",
           "message": "Unexpected console.log statement"
@@ -748,30 +764,6 @@
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
           "line": 270,
-          "column": 5,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 271,
-          "column": 5,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 272,
-          "column": 5,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 296,
           "column": 7,
           "severity": "info",
           "rule": "no-console",
@@ -779,15 +771,7 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 298,
-          "column": 7,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 302,
+          "line": 273,
           "column": 3,
           "severity": "info",
           "rule": "no-console",
@@ -795,7 +779,7 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 305,
+          "line": 274,
           "column": 3,
           "severity": "info",
           "rule": "no-console",
@@ -803,7 +787,7 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 306,
+          "line": 275,
           "column": 3,
           "severity": "info",
           "rule": "no-console",
@@ -811,7 +795,7 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 307,
+          "line": 276,
           "column": 3,
           "severity": "info",
           "rule": "no-console",
@@ -819,24 +803,16 @@
         },
         {
           "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 308,
+          "line": 277,
           "column": 3,
           "severity": "info",
           "rule": "no-console",
           "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/examples/scripts/batch-processing.ts",
-          "line": 312,
-          "column": 1,
-          "severity": "warning",
-          "rule": "max-lines",
-          "message": "File has 312 lines, exceeds maximum of 300"
         }
       ],
       "score": {
-        "score": 51,
-        "grade": "D"
+        "score": 94,
+        "grade": "A"
       }
     },
     {
@@ -1062,8 +1038,8 @@
         }
       ],
       "score": {
-        "score": 78,
-        "grade": "B"
+        "score": 95,
+        "grade": "A"
       }
     },
     {
@@ -1074,121 +1050,121 @@
         "functions": [
           {
             "name": "analyzeChunks",
-            "line": 35,
+            "line": 34,
             "complexity": 3,
             "cognitiveComplexity": 2
           },
           {
             "name": "generateContext",
-            "line": 48,
+            "line": 47,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "processChunk",
-            "line": 49,
-            "complexity": 3,
+            "line": 48,
+            "complexity": 2,
             "cognitiveComplexity": 2
           },
           {
             "name": "mergeResults",
-            "line": 74,
+            "line": 67,
             "complexity": 2,
-            "cognitiveComplexity": 1
+            "cognitiveComplexity": 2
           },
           {
             "name": "(anonymous)",
-            "line": 82,
+            "line": 75,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "getKey",
-            "line": 96,
+            "line": 89,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "parseChunkResult",
-            "line": 114,
+            "line": 107,
             "complexity": 3,
             "cognitiveComplexity": 2
           },
           {
             "name": "normalizeParsedData",
-            "line": 140,
+            "line": 133,
             "complexity": 4,
             "cognitiveComplexity": 3
           },
           {
             "name": "(anonymous)",
-            "line": 161,
+            "line": 154,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "attemptPartialParse",
-            "line": 176,
+            "line": 169,
             "complexity": 7,
             "cognitiveComplexity": 9
           },
           {
             "name": "(anonymous)",
-            "line": 189,
+            "line": 182,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "mergeAnalysisKeywords",
-            "line": 217,
+            "line": 210,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 220,
+            "line": 213,
             "complexity": 2,
             "cognitiveComplexity": 1
           },
           {
             "name": "extractPatternEntries",
-            "line": 231,
+            "line": 224,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 235,
+            "line": 228,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 236,
+            "line": 229,
             "complexity": 2,
-            "cognitiveComplexity": 1
+            "cognitiveComplexity": 2
           },
           {
             "name": "mergeAnalysisPatterns",
-            "line": 242,
+            "line": 235,
             "complexity": 8,
             "cognitiveComplexity": 10
           },
           {
             "name": "calculateConfidence",
-            "line": 262,
+            "line": 255,
             "complexity": 2,
             "cognitiveComplexity": 1
           },
           {
             "name": "(anonymous)",
-            "line": 264,
+            "line": 257,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 265,
+            "line": 258,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
@@ -1208,79 +1184,79 @@
         "functions": [
           {
             "name": "refineTemplate",
-            "line": 31,
+            "line": 30,
             "complexity": 6,
             "cognitiveComplexity": 4
           },
           {
             "name": "refineTemplateWithIterator",
-            "line": 54,
+            "line": 53,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "initialize",
-            "line": 65,
+            "line": 64,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "act",
-            "line": 71,
+            "line": 70,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "evaluate",
-            "line": 80,
+            "line": 79,
             "complexity": 2,
             "cognitiveComplexity": 1
           },
           {
             "name": "transition",
-            "line": 89,
+            "line": 88,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "finalize",
-            "line": 95,
+            "line": 94,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "refineTemplateStep",
-            "line": 105,
+            "line": 104,
             "complexity": 6,
             "cognitiveComplexity": 5
           },
           {
             "name": "initializeTemplate",
-            "line": 127,
+            "line": 126,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "evaluateTemplate",
-            "line": 140,
+            "line": 139,
             "complexity": 8,
             "cognitiveComplexity": 7
           },
           {
             "name": "generateFeedback",
-            "line": 180,
+            "line": 179,
             "complexity": 6,
             "cognitiveComplexity": 5
           },
           {
             "name": "extractAbstractTemplate",
-            "line": 197,
+            "line": 196,
             "complexity": 4,
             "cognitiveComplexity": 4
           },
           {
             "name": "extractMetadata",
-            "line": 217,
+            "line": 216,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
@@ -1300,48 +1276,39 @@
         "functions": [
           {
             "name": "reportProgress",
-            "line": 28,
+            "line": 27,
             "complexity": 2,
             "cognitiveComplexity": 1
           },
           {
             "name": "calculateOverlapSize",
-            "line": 38,
+            "line": 37,
             "complexity": 3,
             "cognitiveComplexity": 2
           },
           {
             "name": "constructor",
-            "line": 50,
+            "line": 49,
             "complexity": 2,
             "cognitiveComplexity": 1
           },
           {
             "name": "extract",
-            "line": 61,
+            "line": 60,
             "complexity": 6,
             "cognitiveComplexity": 6
           },
           {
             "name": "performExtraction",
-            "line": 83,
+            "line": 84,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
         ]
       },
-      "issues": [
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/src/core.ts",
-          "line": 83,
-          "column": 3,
-          "severity": "warning",
-          "rule": "max-params",
-          "message": "Function \"performExtraction\" has 5 parameters. Maximum allowed is 4"
-        }
-      ],
+      "issues": [],
       "score": {
-        "score": 92,
+        "score": 100,
         "grade": "A"
       }
     },
@@ -1361,7 +1328,7 @@
             "name": "chat",
             "line": 8,
             "complexity": 2,
-            "cognitiveComplexity": 1
+            "cognitiveComplexity": 3
           },
           {
             "name": "constructor",
@@ -1441,8 +1408,8 @@
     {
       "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/src/json-utils.ts",
       "complexity": {
-        "cyclomatic": 9,
-        "cognitive": 12,
+        "cyclomatic": 8,
+        "cognitive": 11,
         "functions": [
           {
             "name": "extractJSON",
@@ -1487,16 +1454,40 @@
             "cognitiveComplexity": 1
           },
           {
-            "name": "createValidator",
+            "name": "hasRequiredKeys",
             "line": 165,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 169,
-            "complexity": 9,
-            "cognitiveComplexity": 12
+            "line": 166,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "passesTypeChecks",
+            "line": 172,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 177,
+            "complexity": 2,
+            "cognitiveComplexity": 1
+          },
+          {
+            "name": "createValidator",
+            "line": 184,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 188,
+            "complexity": 6,
+            "cognitiveComplexity": 8
           }
         ]
       },
@@ -1509,14 +1500,20 @@
     {
       "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/src/keyword-utils.ts",
       "complexity": {
-        "cyclomatic": 10,
-        "cognitive": 9,
+        "cyclomatic": 8,
+        "cognitive": 7,
         "functions": [
           {
-            "name": "normalizeKeyword",
+            "name": "extractTerm",
             "line": 20,
-            "complexity": 10,
-            "cognitiveComplexity": 9
+            "complexity": 4,
+            "cognitiveComplexity": 4
+          },
+          {
+            "name": "normalizeKeyword",
+            "line": 33,
+            "complexity": 8,
+            "cognitiveComplexity": 6
           },
           {
             "name": "normalizeKeywords",
@@ -1836,7 +1833,7 @@
             "name": "isCodeBlockBoundary",
             "line": 29,
             "complexity": 3,
-            "cognitiveComplexity": 2
+            "cognitiveComplexity": 3
           },
           {
             "name": "isMajorHeadingBoundary",
@@ -1865,8 +1862,8 @@
           {
             "name": "constructor",
             "line": 93,
-            "complexity": 1,
-            "cognitiveComplexity": 0
+            "complexity": 4,
+            "cognitiveComplexity": 3
           },
           {
             "name": "merge",
@@ -2141,7 +2138,7 @@
             "name": "(anonymous)",
             "line": 206,
             "complexity": 2,
-            "cognitiveComplexity": 1
+            "cognitiveComplexity": 2
           },
           {
             "name": "compareTemplates",
@@ -2245,7 +2242,7 @@
             "name": "(anonymous)",
             "line": 35,
             "complexity": 4,
-            "cognitiveComplexity": 3
+            "cognitiveComplexity": 6
           },
           {
             "name": "validateTemplateElement",
@@ -2278,20 +2275,26 @@
             "cognitiveComplexity": 0
           },
           {
+            "name": "resolveLanguage",
+            "line": 167,
+            "complexity": 3,
+            "cognitiveComplexity": 2
+          },
+          {
             "name": "validateExtractionConfig",
-            "line": 165,
-            "complexity": 4,
-            "cognitiveComplexity": 3
+            "line": 174,
+            "complexity": 8,
+            "cognitiveComplexity": 7
           },
           {
             "name": "isMetadataKey",
-            "line": 186,
+            "line": 191,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "compareMetadataValues",
-            "line": 196,
+            "line": 201,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
@@ -2335,142 +2338,31 @@
           },
           {
             "name": "onProgress",
-            "line": 101,
+            "line": 91,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 128,
+            "line": 110,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 149,
+            "line": 121,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 150,
+            "line": 122,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 171,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 172,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "chat",
-            "line": 174,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 193,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "chat",
-            "line": 196,
-            "complexity": 2,
-            "cognitiveComplexity": 1
-          },
-          {
-            "name": "(anonymous)",
-            "line": 223,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 224,
-            "complexity": 2,
-            "cognitiveComplexity": 1
-          },
-          {
-            "name": "(anonymous)",
-            "line": 279,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 280,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 286,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "onProgress",
-            "line": 296,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          }
-        ]
-      },
-      "issues": [
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/extract-template.test.ts",
-          "line": 102,
-          "column": 11,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/extract-template.test.ts",
-          "line": 310,
-          "column": 7,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/extract-template.test.ts",
-          "line": 313,
-          "column": 1,
-          "severity": "warning",
-          "rule": "max-lines",
-          "message": "File has 313 lines, exceeds maximum of 300"
-        }
-      ],
-      "score": {
-        "score": 85,
-        "grade": "B"
-      }
-    },
-    {
-      "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/pattern-generation.test.ts",
-      "complexity": {
-        "cyclomatic": 12,
-        "cognitive": 11,
-        "functions": [
-          {
-            "name": "chat",
-            "line": 8,
-            "complexity": 12,
-            "cognitiveComplexity": 11
-          },
-          {
-            "name": "(anonymous)",
-            "line": 133,
+            "line": 136,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
@@ -2481,8 +2373,121 @@
             "cognitiveComplexity": 0
           },
           {
+            "name": "chat",
+            "line": 139,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
             "name": "(anonymous)",
-            "line": 138,
+            "line": 149,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "chat",
+            "line": 152,
+            "complexity": 2,
+            "cognitiveComplexity": 4
+          },
+          {
+            "name": "(anonymous)",
+            "line": 164,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 165,
+            "complexity": 2,
+            "cognitiveComplexity": 1
+          },
+          {
+            "name": "(anonymous)",
+            "line": 203,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 204,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 206,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "onProgress",
+            "line": 212,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          }
+        ]
+      },
+      "issues": [
+        {
+          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/extract-template.test.ts",
+          "line": 92,
+          "column": 11,
+          "severity": "info",
+          "rule": "no-console",
+          "message": "Unexpected console.log statement"
+        }
+      ],
+      "score": {
+        "score": 99,
+        "grade": "A"
+      }
+    },
+    {
+      "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/pattern-generation.test.ts",
+      "complexity": {
+        "cyclomatic": 7,
+        "cognitive": 4,
+        "functions": [
+          {
+            "name": "detectPattern",
+            "line": 103,
+            "complexity": 7,
+            "cognitiveComplexity": 4
+          },
+          {
+            "name": "detectEnglish",
+            "line": 113,
+            "complexity": 3,
+            "cognitiveComplexity": 1
+          },
+          {
+            "name": "chat",
+            "line": 125,
+            "complexity": 3,
+            "cognitiveComplexity": 3
+          },
+          {
+            "name": "(anonymous)",
+            "line": 135,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 139,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 140,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 156,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
@@ -2494,7 +2499,37 @@
           },
           {
             "name": "(anonymous)",
-            "line": 206,
+            "line": 173,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 184,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 185,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 190,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 191,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 197,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
@@ -2502,17 +2537,29 @@
             "name": "(anonymous)",
             "line": 207,
             "complexity": 1,
-            "cognitiveComplexity": 0
+            "cognitiveComplexity": 4
           },
           {
             "name": "(anonymous)",
-            "line": 235,
+            "line": 218,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 236,
+            "line": 225,
+            "complexity": 1,
+            "cognitiveComplexity": 0
+          },
+          {
+            "name": "(anonymous)",
+            "line": 226,
+            "complexity": 1,
+            "cognitiveComplexity": 2
+          },
+          {
+            "name": "chat",
+            "line": 229,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
@@ -2530,95 +2577,22 @@
           },
           {
             "name": "(anonymous)",
-            "line": 251,
+            "line": 246,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 261,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 275,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 285,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 286,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "chat",
-            "line": 290,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 314,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 315,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 327,
-            "complexity": 1,
-            "cognitiveComplexity": 0
-          },
-          {
-            "name": "(anonymous)",
-            "line": 343,
+            "line": 252,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
         ]
       },
-      "issues": [
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/pattern-generation.test.ts",
-          "line": 348,
-          "column": 7,
-          "severity": "info",
-          "rule": "no-console",
-          "message": "Unexpected console.log statement"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/pattern-generation.test.ts",
-          "line": 352,
-          "column": 1,
-          "severity": "warning",
-          "rule": "max-lines",
-          "message": "File has 352 lines, exceeds maximum of 300"
-        },
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/pattern-generation.test.ts",
-          "line": 8,
-          "column": 1,
-          "severity": "warning",
-          "rule": "max-complexity",
-          "message": "Function \"chat\" has a cyclomatic complexity of 12 (threshold: 10)"
-        }
-      ],
+      "issues": [],
       "score": {
-        "score": 77,
-        "grade": "B"
+        "score": 100,
+        "grade": "A"
       }
     },
     {
@@ -2660,7 +2634,7 @@
       "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/unillm-integration.test.ts",
       "complexity": {
         "cyclomatic": 3,
-        "cognitive": 3,
+        "cognitive": 7,
         "functions": [
           {
             "name": "(anonymous)",
@@ -2714,13 +2688,13 @@
             "name": "(anonymous)",
             "line": 138,
             "complexity": 3,
-            "cognitiveComplexity": 3
+            "cognitiveComplexity": 7
           },
           {
             "name": "(anonymous)",
             "line": 165,
             "complexity": 2,
-            "cognitiveComplexity": 1
+            "cognitiveComplexity": 3
           }
         ]
       },
@@ -2799,7 +2773,7 @@
         }
       ],
       "score": {
-        "score": 91,
+        "score": 97,
         "grade": "A"
       }
     },
@@ -3201,7 +3175,7 @@
       "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/unit/keyword-utils.test.ts",
       "complexity": {
         "cyclomatic": 1,
-        "cognitive": 0,
+        "cognitive": 2,
         "functions": [
           {
             "name": "(anonymous)",
@@ -3243,7 +3217,7 @@
             "name": "(anonymous)",
             "line": 48,
             "complexity": 1,
-            "cognitiveComplexity": 0
+            "cognitiveComplexity": 2
           },
           {
             "name": "(anonymous)",
@@ -3401,7 +3375,7 @@
       "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/unit/type-guards.test.ts",
       "complexity": {
         "cyclomatic": 1,
-        "cognitive": 0,
+        "cognitive": 2,
         "functions": [
           {
             "name": "(anonymous)",
@@ -3423,223 +3397,214 @@
           },
           {
             "name": "(anonymous)",
-            "line": 23,
+            "line": 22,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 29,
+            "line": 27,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 36,
+            "line": 33,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 44,
+            "line": 41,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 45,
+            "line": 42,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 54,
+            "line": 46,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 63,
+            "line": 49,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 67,
+            "line": 52,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 73,
+            "line": 58,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 74,
+            "line": 59,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 94,
+            "line": 79,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 105,
+            "line": 90,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 123,
+            "line": 108,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 130,
+            "line": 115,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 131,
+            "line": 116,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 136,
+            "line": 121,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 142,
+            "line": 127,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 149,
+            "line": 134,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 150,
+            "line": 135,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 159,
+            "line": 144,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 167,
+            "line": 152,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 179,
+            "line": 164,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 186,
+            "line": 171,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 187,
+            "line": 172,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 192,
+            "line": 177,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 198,
+            "line": 183,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 210,
+            "line": 195,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 216,
+            "line": 201,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 227,
+            "line": 212,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 228,
+            "line": 213,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 247,
+            "line": 232,
             "complexity": 1,
             "cognitiveComplexity": 0
           },
           {
             "name": "(anonymous)",
-            "line": 263,
+            "line": 248,
             "complexity": 1,
-            "cognitiveComplexity": 0
+            "cognitiveComplexity": 2
           },
           {
             "name": "(anonymous)",
-            "line": 281,
+            "line": 266,
             "complexity": 1,
-            "cognitiveComplexity": 0
+            "cognitiveComplexity": 2
           },
           {
             "name": "(anonymous)",
-            "line": 297,
+            "line": 282,
             "complexity": 1,
             "cognitiveComplexity": 0
           }
         ]
       },
-      "issues": [
-        {
-          "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/unit/type-guards.test.ts",
-          "line": 304,
-          "column": 1,
-          "severity": "warning",
-          "rule": "max-lines",
-          "message": "File has 304 lines, exceeds maximum of 300"
-        }
-      ],
+      "issues": [],
       "score": {
-        "score": 87,
-        "grade": "B"
+        "score": 100,
+        "grade": "A"
       }
     },
     {
@@ -3671,27 +3636,27 @@
   ],
   "summary": {
     "totalFiles": 30,
-    "totalIssues": 108,
+    "totalIssues": 98,
     "issuesBySeverity": {
       "error": 0,
-      "warning": 6,
-      "info": 102
+      "warning": 0,
+      "info": 98
     },
-    "averageComplexity": 2.255050505050505,
+    "averageComplexity": 2.245049504950495,
     "maxComplexity": {
-      "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/tests/integration/pattern-generation.test.ts",
-      "function": "chat",
-      "complexity": 12
+      "file": "/Users/o6lvl4/workspace/github.com/Aid-On/aid-on-platform/packages/templex/cli/cli-generate.ts",
+      "function": "main",
+      "complexity": 10
     }
   },
   "score": {
-    "overall": 94,
+    "overall": 91,
     "grade": "A",
     "distribution": {
-      "A": 24,
-      "B": 5,
+      "A": 30,
+      "B": 0,
       "C": 0,
-      "D": 1,
+      "D": 0,
       "F": 0
     }
   }

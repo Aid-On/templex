@@ -160,6 +160,25 @@ export function formatForLLM(obj: unknown, pretty: boolean = true): string {
 }
 
 /**
+ * Check that all required keys exist on a record
+ */
+function hasRequiredKeys(record: Record<string, unknown>, requiredKeys: string[]): boolean {
+  return requiredKeys.every(key => key in record);
+}
+
+/**
+ * Check that all type constraints pass on a record
+ */
+function passesTypeChecks(
+  record: Record<string, unknown>,
+  typeChecks: Record<string, (val: unknown) => boolean>
+): boolean {
+  return Object.entries(typeChecks).every(
+    ([key, check]) => !(key in record) || check(record[key])
+  );
+}
+
+/**
  * Create a JSON schema validator
  */
 export function createValidator<T>(
@@ -173,20 +192,12 @@ export function createValidator<T>(
 
     const record = obj as Record<string, unknown>;
 
-    // Check required keys
-    for (const key of requiredKeys) {
-      if (!(key in record)) {
-        return false;
-      }
+    if (!hasRequiredKeys(record, requiredKeys)) {
+      return false;
     }
 
-    // Check types if provided
-    if (typeChecks) {
-      for (const [key, check] of Object.entries(typeChecks)) {
-        if (key in record && !check(record[key])) {
-          return false;
-        }
-      }
+    if (typeChecks && !passesTypeChecks(record, typeChecks)) {
+      return false;
     }
 
     return true;

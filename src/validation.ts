@@ -159,12 +159,19 @@ export function validateChunkAnalysis(analysis: ChunkAnalysis): ChunkAnalysis {
   };
 }
 
+const VALID_LANGUAGES = new Set(['ja', 'en']);
+
+/**
+ * Resolve a valid language from config, defaulting to 'ja'
+ */
+function resolveLanguage(lang: string | undefined): string {
+  return lang && VALID_LANGUAGES.has(lang) ? lang : 'ja';
+}
+
 /**
  * Validate ExtractionConfig
  */
 export function validateExtractionConfig(config: ExtractionConfig): Required<ExtractionConfig> {
-  const validLanguages = ['ja', 'en'];
-  
   return {
     provider: config.provider,
     model: config.model || 'gpt-4',
@@ -173,9 +180,7 @@ export function validateExtractionConfig(config: ExtractionConfig): Required<Ext
     extractPatterns: config.extractPatterns ?? true,
     extractKeywords: config.extractKeywords ?? true,
     extractMetadata: config.extractMetadata ?? true,
-    language: validLanguages.includes(config.language || '') 
-      ? config.language! 
-      : 'ja',
+    language: resolveLanguage(config.language),
     useIterativeRefinement: config.useIterativeRefinement ?? false
   };
 }

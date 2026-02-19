@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { generate } from '@aid-on/unillm';
 import { TemplateExtractor } from '../../src/core';
-import { ArticleGenerator, createUnillmProvider } from '../../src/generator';
+import { ArticleGenerator } from '../../src/generator';
 import type { LLMProvider, ExtractionConfig, ArticleData } from '../../src/types';
 
 describe('Unillm Integration Tests', () => {
